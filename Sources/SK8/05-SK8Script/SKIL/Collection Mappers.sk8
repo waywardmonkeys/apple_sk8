@@ -1,0 +1,589 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--      SK8Script version of Collection Mappers
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+--collectionLength
+
+on collectionLength of me (a Collection),  typeFilter (an Object), whereFilter (a Function)
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until finished
+			set currentItem to my elementAtVisitState (currentState)
+			if ((not typeFilter) or (currentItem is a typefilter)) and ((not whereFilter) or (call whereFilter of currentItem)) then
+				set cnt to cnt + 1
+			end if
+			if isFinalVisitState (me, currentState) then set finished to true
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+	end if
+	return cnt
+end collectionLength
+
+--------------------------------------------------------------------
+--collectionNthState
+
+on collectionNthState of me (a Collection),  n (an Integer)
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	local res (an Object) =  undefined
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until finished
+			set cnt to cnt + 1
+			if cnt >= n then 
+				set res to currentState
+				exit repeat
+			end if
+			if isFinalVisitState (me, currentState) then set finished to true
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+	end if
+	return currentState
+end collectionNthState
+
+on collectionNth of me (a Collection),  n (an Integer)
+	return my elementAtVisitState (collectionNthState of me, n)
+end collectionNth
+
+
+--------------------------------------------------------------------
+--Length
+
+on length of obj --(a Collection)
+	return collectionLength of obj, false, false
+end length
+
+
+--------------------------------------------------------------------
+--insertInFront
+on doInsertInFront of me (a Collection), value
+	return insertAtVisitState of me, (my initialVisitState), value without after
+end doInsertInFront
+
+on doInsertInFront of me (an AliasedCollection), value
+	local realCollection (a collection) = getpropertyvalue of me, (my collectionProperty)
+	return doInsertInFront of realCollection, value
+end doInsertInFront
+
+on doInsertInFront of me (a Text), value
+	local realCollection (a collection) = my characters
+	get insertAtVisitState of realCollection, (realCollection's initialVisitState), value without after
+	return the basetext of the result
+end doInsertInFront
+
+on insertInFront of value, location
+	return doInsertInFront of Location, Value
+end insertInFront
+
+
+
+--------------------------------------------------------------------
+--InsertAtEnd
+on doInsertAtEnd of me (a Collection), value
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until isFinalVisitState (me, currentState) 
+			set currentState to succeedingVisitState of me, currentState
+		end repeat
+		return insertAtVisitState of me, currentState, value with after
+	else
+		return {value}
+	end if
+end doInsertAtEnd
+
+on doInsertAtEnd of me (an AliasedCollection), value
+	local realCollection (a collection) = getpropertyvalue of me, (my collectionProperty)
+	return doInsertAtEnd of realCollection, value
+end doInsertAtEnd
+
+on doInsertAtEnd of me (a Text), value
+	return basetext of (doInsertAtEnd of (my characters), value)
+end doInsertAtEnd
+
+on insertAtEnd of value, location (a collection)
+	return doInsertAtEnd of Location, Value
+end insertAtEnd
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--middleIndex
+
+on middleIndex of me (a Collection), typeFilter (an Object), whereFilter (a Function)
+	local len (an Integer) = collectionlength of me, typeFilter, whereFilter
+	return (len div 2) + (len mod 2)
+end middleIndex
+
+on middleIndex of me (a table), typeFilter (an Object), whereFilter (a Function)
+	error of "Cannot get the MIDDLE item of a table."
+end middleIndex
+
+--------------------------------------------------------------------
+--AnyIndex
+
+on AnyIndex of me (a Collection), typeFilter (an Object), whereFilter (a Function)
+	local len (an Integer) = collectionlength of me, typeFilter, whereFilter
+	if len > 0 then
+		return ((random of len) + 1)
+	else
+		return false
+	end if
+end AnyIndex
+
+on AnyIndex of me (a table), typeFilter (an Object), whereFilter (a Function)
+	local keys (a list) = my keys
+	local newKeys (a list) = {}
+	local len (an Integer)
+	
+	repeat with i in keys
+		set currentItem to elementAtVisitState of me, (visitStateAtKey of me, i)
+		if ((not typeFilter) or (currentItem is a typefilter)) and ((not whereFilter) or (call whereFilter of currentItem)) then
+			set newKeys to doInsertAtEnd(newKeys, i)
+		end if
+	end repeat
+	set keys to newKeys
+	set len to the length of keys
+	if len > 0 then
+		set curindex to ((random of len) + 1)
+		return (collectionNth of keys, curIndex) 
+	else
+		return false
+	end if
+end AnyIndex
+
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+-- nthItemWithFilters
+
+on nthItemWithFilters of me (a Collection), n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function)
+	local completeCount (an Integer) = 0
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	set anyResult to false
+	set foundItem to false
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until finished
+			set completeCount to completeCount + 1
+			set currentItem to my elementAtVisitState (currentState)
+			if ((not typeFilter) or (currentItem is a typefilter)) and Â
+					((not whereFilter) or (call whereFilter of currentItem)) then
+				set cnt to cnt + 1
+				set anyResult to true
+				set foundItem to currentItem
+				if n and (cnt = n) then exit repeat
+			end if
+			if isFinalVisitState (me, currentState) then 
+				if n <> false then set foundItem to false
+				set finished to true
+			end if
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+	end if
+	if foundItem and actionAtItem then
+		return call actionAtItem of me, foundItem, currentState, completecount
+	else if anyResult then
+	return foundItem
+        else 
+	return coll
+        end if
+end nthItemWithFilters
+
+
+--------------------------------------------------------------------
+-- nthItemWithFilters
+
+on nthItemWithFiltersAndStart of me (a Collection), n (an Integer), typeFilter (an Object), whereFilter (a Function), direction (a symbol), startLoc (an Integer), actionAtItem (a Function)
+	local completeCount (an Integer) = 0
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	local ourResult (a list) = {}
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until finished
+			set completeCount to completeCount + 1
+			if (direction = 'before') and (completeCount >= startLoc) then exit repeat
+			set currentItem to my elementAtVisitState (currentState)
+			if ((direction = 'before') or (completecount > startLoc)) and Â
+					((not typeFilter) or (currentItem is a typefilter)) and Â
+					((not whereFilter) or (call whereFilter of currentItem)) then
+				set cnt to cnt + 1
+				set foundItem to currentItem
+				set foundState to currentState
+				set foundCnt to completeCount
+				if (direction = 'before') then
+					set ourResult to (doinsertAtEnd of ourResult, {foundItem, foundState, foundCnt}) 
+				else
+					if n and (cnt = n) then exit repeat
+				end if
+			end if
+			if isFinalVisitState (me, currentState) then 
+				if n <> false then set foundItem to false
+				set finished to true
+			end if
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+	end if
+	if (direction = 'before') then
+		if n then
+			set ind to ((collectionLength of ourResult, false, false) - n) + 1
+		else set ind to 1
+		if ind > 0 then  set curitem to (collectionNth of ourResult, ind) 
+		set {foundItem, foundState, foundCnt} to curItem
+	end if
+	if foundCnt then
+		if actionAtItem then
+			return call actionAtItem of me, foundItem, foundState, foundCnt
+		else
+			return foundItem
+		end if
+	else
+		return false
+	end if
+end nthItemWithFiltersAndStart
+
+
+on doSingleItemMapper of coll, n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	local specialAction (a Boolean) = false
+	unless startLocation do set startLocation to 0
+	
+	if (actionType = 'RemoveInternal') or (actionType = 'InsertBefore') or (actionType = 'InsertAfter') or (actionType = 'set') then
+		set SpecialAction to true
+	else set SpecialAction to false
+	if ((startLocation <> 0) or (direction = 'before') or specialAction) then
+		if specialAction and ((coll is a list) or (coll is a string)) then set coll to a copy of coll
+		set res to nthItemWithFiltersAndStart of coll, n, typeFilter, whereFilter, direction, startLocation, actionAtItem
+	else
+		set res to nthItemWithFilters of coll, n, typeFilter, whereFilter, actionAtItem
+	end if
+	return res
+end doSingleItemMapper
+
+
+on singleItemMapper of me (a Collection), n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	return doSingleItemMapper of me, n, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+end singleItemMapper
+
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+-- itemRangeWithFilters
+
+on itemRangeWithFilters of me (a Collection), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), startLocation (an Integer), actionAtItem (a Function), createListP (a Boolean), settingP (a Boolean)
+	local currentItem
+	local completeCount (an Integer) = 0
+	local coll (a collection) = me
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	local ourResult (a list) = {}
+	local currentState (a VisitState) = my InitialVisitState
+	if currentState then
+		repeat until finished = true
+			set completeCount to completeCount + 1
+			set currentItem to my elementAtVisitState (currentState)
+			if (completeCount > startLocation) and Â
+					((not typeFilter) or (currentItem is a typefilter)) and Â
+					((not whereFilter) or (call whereFilter of currentItem)) then
+				set cnt to cnt + 1
+				if (cnt >= beginIndex) then
+					if actionAtItem then
+						set curRes to call actionAtItem of coll, currentItem, currentState, completeCount
+					else set curRes to currentItem
+					if settingP and (coll is an indirectTextVector) then
+						set coll to curRes
+						set currentState to collectionNthState of coll, completeCount
+					end if
+					if createListP then
+						if ourResult = false then set ourResult to {}
+						set ourResult to doinsertAtEnd of ourResult, curRes
+					else
+						set coll to curRes
+					end if
+				end if
+				if endIndex and (cnt >= endIndex) then exit repeat
+			end if
+			if ((currentState = false) or (isFinalVisitState (me, currentState))) then set finished to true
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+	end if
+	if endIndex = false or (cnt >= beginIndex) then
+		if createListP = true then
+			return ourResult
+		else return coll
+	else return false
+end itemRangeWithFilters
+
+on itemRangeWithFiltersAndBefore of me (a Collection), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), endLocation, actionAtItem, createListP, settingP
+	local completeCount (an Integer) = 0
+	local cnt (an Integer) = 0
+	local finished (a Boolean) = false
+	local coll (a collection) = me
+	local currentState (a VisitState) = my InitialVisitState
+	local ourResult (a list) = {}
+	if currentState then
+		repeat until finished
+			set completeCount to completeCount + 1
+			set currentItem to my elementAtVisitState (currentState)
+			if completeCount >= endLocation then exit repeat
+			if ((not typeFilter) or (currentItem is a typefilter)) and Â
+					((not whereFilter) or (call whereFilter of currentItem)) then
+				set cnt to cnt + 1
+				if actionAtItem then
+					set ourResult to doinsertAtEnd of ourResult, {currentItem, false, completeCount}
+				else set ourResult to doinsertAtEnd of ourResult, currentItem
+			end if
+			if isFinalVisitState (me, currentState) then set finished to true
+			set currentState to my succeedingVisitState(currentState)
+		end repeat
+		set len to the length of ourResult
+		set curEnd to (len - beginIndex) + 1
+		if endIndex then
+			set curstart to (len - endIndex) + 1
+		else set curstart to 1
+		if curstart < 1 then set curstart to 1
+		if  (curStart <= len) and (curEnd >= 0) and (curEnd <= len) then
+			--set ourResult to item curStart thru curEnd in ourResult
+			set currentState to collectionNthState of ourResult, curStart
+			set newResult to {}
+			repeat for ((curEnd - curStart) + 1) times
+				set newResult to doInsertAtEnd of newResult, (elementAtVisitState of ourResult, currentState)
+				set currentState to succeedingVisitState (ourResult, currentState)
+			end repeat
+			set ourResult to newResult
+		else set ourResult to false
+	end if
+	if actionAtItem then
+		set newResult to {}
+		repeat with args in ourResult
+			set {currentItem, currentVal, currentCount} to args
+			set currentVal to collectionNthState of Coll, currentCount
+			set curRes to call actionAtItem of coll, currentItem, currentVal, currentCount
+			if settingP and coll is an indirectTextVector then set coll to curRes
+			set newResult to doInsertAtEnd of newResult, curRes
+		end repeat
+		set ourResult to newResult
+	end if
+	if createListP then
+		return ourResult
+	else
+		return coll
+	end if
+end itemRangeWithFiltersAndBefore
+
+
+on doFullRangeMapper of coll, beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	unless startLocation do set startLocation to 0
+	if (actionType = 'RemoveInternal') or (actionType = 'InsertBefore') or (actionType = 'InsertAfter') or (actionType = 'set') then
+		set SpecialAction to true
+	else set SpecialAction to false
+	set reverseIt to false
+	if one of
+		(not beginIndex) and (not endIndex)   : error of "Both indices cannot be last."
+		(not beginIndex)                      : set reverseIt to true
+		endindex and (beginIndex > endIndex)  : set reverseIt to true
+	end if
+	if reverseIt = true then
+		set tmp to endIndex
+		set endIndex to beginIndex
+		set beginIndex to tmp
+	end if
+	if specialAction and (coll is a list or coll is a string) then set coll to a copy of coll
+	if  direction = 'before' then
+		set ourResult to itemRangeWithFiltersAndBefore of coll, beginIndex, endIndex, typeFilter, Â
+			whereFilter,  startLocation, actionAtItem, Â
+			(not specialAction),  (actiontype = 'set')
+	else set ourResult to itemRangeWithFilters of coll, beginIndex, endIndex, typeFilter, Â
+		whereFilter,  startLocation, actionAtItem, Â
+		(not specialAction),  (actiontype = 'set')
+	
+	if reverseIt = true and specialAction = false then
+		return reverse of ourResult
+	else
+		return ourResult
+	end if
+end doFullRangeMapper
+
+
+on fullRangeMapper of me (a Collection), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	return doFullRangeMapper of me, beginIndex, endIndex, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+end fullRangeMapper
+
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+
+on singleItemMapper of me (a Table), n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	local currentState (a VisitState)
+	
+	if one of
+		direction = 'before' or (startlocation is a number and startlocation <> 0) :
+			error of "Before and After cannot be used in Tables"
+		typeFilter and n <> false and n is not an Integer :
+			error of "Table accesses must be of the form item key or type integer"
+		typeFilter :
+			set res to doSingleItemMapper of me, n, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+			if res is a number and actionType = 'PositionInternal' then
+				set res to collectionNth of my keys, res
+			end if
+		whereFilter : 
+			error of "Accessing a key in a table cannot have a type or a where filter."
+			
+		actionType = 'PositionInternal' :   
+			if n is in my keys then 
+				set res to n
+			else set res to false
+		actionAtItem :
+			set currentState to VisitStateAtKey of me, n
+			if actionType = 'set' and currentState = false then
+				setElementAtKey of me, n, false
+				set currentState to VisitStateAtKey of me, n
+			end if
+			set res to call actionAtItem of me, (elementAtVisitState of me, currentState), currentState, 0
+	else set res to elementAtVisitState of me, (VisitStateAtKey of me, n)            
+	return res
+end singleItemMapper
+
+on fullRangeMapper of me (a Table), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	local keys (a list)
+	
+	if one of
+		direction = 'before' or (startlocation is a number and startlocation <> 0) :
+			error of "Before and After cannot be used in Tables"
+		typeFilter and beginIndex <> false and beginIndex is not a number and endIndex <> false and endIndex is not a number  :
+			error of "Table accesses must be of the form item key or type integer"
+		typeFilter or (beginindex = 1 and endindex = false) :
+			set res to doFullRangeMapper of me, beginIndex, endIndex, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+			if actionType = 'PositionInternal' then
+				set newRes to {}
+				set keys to my keys
+				repeat with i in res
+					set newRes to doInsertAtEnd of newRes, (collectionNth of keys, i)
+				end repeat
+				set res to newres
+			end if
+	else error of "Only a single key can be accessed at a time"
+	return res
+end fullRangeMapper
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+on convertArrayIndex of ind
+	if ind is one of 
+		a number ; a list : return ind
+		an array : return (ind as a list)
+	else error of "Unknown Indexing Type"
+end convertArrayIndex
+
+on singleItemMapper of me (an Array), n, typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	if n is a list then 
+		if typeFilter then error of "A type filter cannot be used for a direct array access.  Item should be used instead."
+		set n to 1 + visitStateAtIndex of me, n
+	end if
+	set res to doSingleItemMapper of me, n, typeFilter , whereFilter , actionAtItem, actiontype, direction, startLocation
+	if actionType is 'PositionInternal' then
+		return convertArrayIndex of (indexAtVisitState of me, (res - 1))
+	else return res 
+end singleItemMapper
+
+on fullRangeMapper of me (an Array), beginIndex, endIndex, typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	unless (beginIndex is an Integer and (endIndex is an Integer or endIndex = false)) or Â
+			(beginIndex is a list and endIndex is a list) do
+		error of "When referencing arrays, both indexes must be an Integer or both must be a list."
+	end unless
+	if beginIndex is a list then
+		set beginIndex to 1 + visitStateAtIndex of me, beginIndex
+		set endIndex to 1 + visitStateAtIndex of me, endIndex
+	end if
+	set res to doFullRangeMapper of me, beginIndex, endIndex, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+	if actionType is 'PositionInternal' then
+		set newRes to {}
+		repeat with i in res
+			set newRes to doInsertAtEnd of newRes, (convertArrayIndex of (indexAtVisitState of me, (i - 1)))
+		end repeat
+		return newRes
+	else return res
+end fullRangeMapper
+
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+
+on generateTypeCollection of me (a text), specifiedType
+	if specifiedType is a List then
+		set specifiedTypeValue to  CollectionNth of specifiedType, 4
+	else set specifiedTypeValue to specifiedType
+	
+	if specifiedTypeValue is one of
+		word : return words of me
+		line : return lines of me
+		paragraph : return paragraphs of me
+	else return characters of me
+end generateTypeCollection
+
+
+on singleItemMapper of me (a Text), n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	set res to doSingleItemMapper of (generateTypeCollection of me, typeFilter), n, false, whereFilter, actionAtItem, actiontype, direction, startLocation
+	if res is an IndirectTextVector then set res to the basetext of res
+	return res
+end singleItemMapper
+
+on fullRangeMapper of me (an Text), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	set res to fullRangeMapper of (generateTypeCollection of me, typeFilter), beginIndex, endIndex, false, whereFilter, actionAtItem, actiontype, direction, startLocation
+	if res is an IndirectTextVector then set res to the basetext of res
+	return res
+end fullRangeMapper
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+on singleItemMapper of me (a AliasedCollection), n (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	set realColl to getPropertyValue of me, (collectionProperty of me)
+	return doSingleItemMapper of realColl, n, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+end singleItemMapper
+
+on fullRangeMapper of me (a AliasedCollection), beginIndex (an Integer), endIndex (an Integer), typeFilter (an Object), whereFilter (a Function), actionAtItem (a Function), actiontype (a symbol), direction (a symbol), startLocation (an Integer)
+	set realColl to getPropertyValue of me, (collectionProperty of me)
+	return fullRangeMapper of realColl, beginIndex, endIndex, typeFilter, whereFilter, actionAtItem, actiontype, direction, startLocation
+end fullRangeMapper
+
+
+#|
+Change History (most recent last):
+1  	 5/ 2/96	Brian   	
+2  	 5/ 3/96	Brian   	these now work.
+4  	 5/ 6/96	Brian   	Removing dashes from SKIL locals.
+7  	 5/10/96	Brian   	
+8  	 7/26/96	Brian   	
+	9  	 8/ 5/96	Brian   	First pass at adding type information.
+	10 	 2/27/97	Hernan  	
+	11 	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

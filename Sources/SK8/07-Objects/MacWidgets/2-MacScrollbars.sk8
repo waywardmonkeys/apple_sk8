@@ -1,0 +1,499 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 2-MacScrollbars.sk8
+
+-- Created on 22-June-94 by John Lilly
+
+-- Questions or comments should be addressed to Rick Evans (revans@taurus.apple.com)
+
+-- This file contains the SK8 definitions and handlers for standard Mac
+-- scrollbars
+
+-- The next couple of lines are for automatic loading of other required files. First
+-- we'll set the variable MacScrollBarsLoaded to true so that other objects know this
+-- file has been loaded in, then we might need to load in the MacWidget.sk8 file.
+
+--set MacScrollbarsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--   with project sk8
+
+-- The first thing that we need to do is load in the renderers for the inactive
+-- scroll arrows, which are all PICT (->QDPicture) resources.
+
+new QDPicture with objectName "scrollerUpInactiveQD" Â
+   with file (file of sk8) Â
+   with resourceID 145
+
+new ImageRenderer with objectName "scrollerUpInactiveRenderer" Â
+   with media scrollerUpInactiveQD
+
+new QDPicture with objectName "scrollerLeftInactiveQD" Â
+   with file (file of sk8) Â
+   with resourceID 146
+
+new ImageRenderer with objectName "scrollerLeftInactiveRenderer" Â
+   with media scrollerLeftInactiveQD
+
+new QDPicture with objectName "scrollerDownInactiveQD" Â
+   with file (file of sk8) Â
+   with resourceID 147
+
+new ImageRenderer with objectName "scrollerDownInactiveRenderer" Â
+   with media scrollerDownInactiveQD
+
+new QDPicture with objectName "scrollerRightInactiveQD" Â
+   with file (file of sk8) Â
+   with resourceID 144
+
+new ImageRenderer with objectName "scrollerRightInactiveRenderer" Â
+   with media scrollerRightInactiveQD
+
+-- This is the default width/height of a vertical/horizontal scrollbar in pixels.
+
+global constant scrollWidth = 16
+
+-- The MacScrollBar object inherits from the Sk8 scroller object, as well as from
+-- the MacWidget object, so that it has the isEnabled property.
+
+new scroller with objectName "MacScrollBar" Â
+   with otherParents {MacWidget} Â
+   with frameSize {1,1} Â
+   with fillColor GrayTone90 Â
+   with doFirstClick true Â
+   with prototype true Â
+   with boundsRect {100, 100, 116, 200}
+
+-- In addition to the standard MacWidget property of being Active or not,
+-- scrollbars also have the notion of being enabled when the thing that it's
+-- scrolling is scrollable, and disabled when it isn't. For instance, a text
+-- document with no text in it should have the scrollbar's isEnabled set to
+-- false, which will cause the thumb to disappear and the body and the arrows
+-- to gray out.
+
+addProperty MacScrollBar, 'isEnabled' with initialValue true
+set MacScrollbar's isActive to true
+
+-- In the original sk8 scroller object, the two arrows are actually each children
+-- of rectangle, with separate handlers, even though they have mostly similar 
+-- behavior, except for their renderers and the directions that they make the 
+-- scroller thumb move. So MacScrollArrow is just a mixin parent of the two arrows,
+-- with properties for the renderers in each state, as well as a direction vector.
+
+new actor with objectName "MacScrollArrow"
+addProperty MacScrollArrow, 'normalRenderer'
+addProperty MacScrollArrow, 'pressedRenderer'
+addProperty MacScrollArrow, 'inactiveRenderer'
+addProperty MacScrollArrow, 'direction'
+
+-- We're giving each of the parts of the scrollbar objectName's here so that they
+-- aren't anonymous objects and we can declare handlers on them.
+
+set the objectName of MacScrollBar's upArrow to "MacScrollUpArrow"
+set the objectName of MacScrollBar's downArrow to "MacScrollDownArrow"
+set the objectName of MacScrollBar's thumb to "MacScrollThumb"
+set the objectName of MacScrollBar's scrollerBody to "MacScrollBody"
+
+-- Here we just fill in the fields of each arrow object so that the upArrow looks
+-- and acts like an Up arrow and the downArrow looks and acts like a downArrow.
+
+addParent MacScrollUpArrow, MacScrollArrow
+set MacScrollUpArrow's inverts to false
+set MacScrollUpArrow's normalRenderer to scrollerUpRenderer
+set MacScrollUpArrow's pressedRenderer to scrollerUpPressedRenderer
+set MacScrollUpArrow's inactiveRenderer to scrollerUpInactiveRenderer
+set MacScrollUpArrow's direction to {0,-1}
+
+addParent MacScrollDownArrow, MacScrollArrow
+set MacScrollDownArrow's inverts to false
+set MacScrollDownArrow's normalRenderer to scrollerDownRenderer
+set MacScrollDownArrow's pressedRenderer to scrollerDownPressedRenderer
+set MacScrollDownArrow's inactiveRenderer to scrollerDownInactiveRenderer
+set MacScrollDownArrow's direction to {0,1}
+
+set MacScrollThumb's fillColor to ScrollerVThumbRenderer
+set MacScrollThumb's frameSize to {0,0}
+
+new rectangle with objectName "MacScrollShadow" Â
+   with visible false Â
+   with fillColor transparent Â
+   with container MacScrollBar
+
+tagPart MacScrollBar, MacScrollShadow, 'shadow'
+
+-- We need to override the handlers which change the appearance
+-- of the cursor when it's over the scroller-that's pretty non-Mac
+-- behavior.
+
+on mouseEnter of me (a MacScrollBar)
+end mouseEnter
+
+on mouseLeave of me (a MacScrollBar)
+end mouseLeave
+
+on mouseEnter of me (a MacScrollThumb)
+end mouseEnter
+
+-- This overrides the handler for Scroller, so that we can make the scroller 
+-- disabled if there is no range to scroll. I probably need to change this just
+-- slightly, b/c the slider should actually always be 1 or 2 pixels w/in the body.
+
+on computePixelValue of me (a MacScrollBar)
+   global scrollWidth
+   set range to my maximumValue - my minimumValue
+   if range equals 0 then
+      set my isEnabled to false
+      return 0
+   else 
+      if my isEnabled doesn't equal true then set my isEnabled to true
+      if my orientation equals 'vertical' then set numPixels to the height of my scrollerBody - 2 Â
+                                          else set numPixels to the width of my scrollerBody - 2
+      if (numPixels - scrollWidth equals 0) then return 0 Â
+         else return (range / (numPixels - scrollWidth)) 
+   end if
+end computePixelValue
+
+-- We need to override this handler from the scroller object just because it's off 
+-- by one pixel.
+
+on currentValueToThumbPosition of me (a MacScrollBar)
+   set orientation to my orientation
+   if orientation is one of 
+      'horizontal':
+         set offset to the left of my scrollerBody + 1
+      'vertical': 
+         set offset to the top of my scrollerBody + 1
+   end if
+   if my pixelValue equals 0 then return offset Â
+      else return offset + ((my currentValue - my minimumValue)/ my pixelValue)
+end currentValueToThumbPosition
+
+-- Again, we need to correct for just one pixel.
+
+on ThumbPositionToCurrentValue of me (a MacScrollBar)
+   if my orientation is one of 
+      'horizontal':
+         set numPixels to the left of my thumb - (the left of my scrollerBody + 1)
+      'vertical':
+         set numPixels to the top of my thumb - (the top of my scrollerBody + 1)
+   end if
+   return (my minimumValue + numPixels * my pixelValue)
+end ThumbPositionToCurrentValue
+
+-- This is probably the trickiest handler for the scrollbar. Since Macintosh scrollbars
+-- are ALWAYS 16 pixels wide (high for horizontal scrollers), we need to constrain the
+-- object to always be that size, so here we're overriding the setboundsrect handler.
+-- It is important to note that we didn't override the "set boundsRect" handler--because 
+-- while it is true that "set boundsRect" always calls setboundsRect, the reverse is not
+-- the case.
+
+-- The only parameters that we care about changing are the coordinates (left, top, right,
+-- and bottom), and justMoving, which is true if the user is moving the object without
+-- resizing. If that's the case, then we don't really need to do anything special--we just
+-- need to pass the parameters straight through to the inherited handler. But if we're 
+-- actually resizing the handler, we need to do some other things. First, we need to see
+-- which sort of scroller we have, horizontal or vertical, by comparing the X and Y 
+-- dimensions. Then we set x and y appropriately so that the scroller looks right--
+-- by constraining the smaller dimension to be scrollWidth pixels and the larger dimension
+-- to be a minimum of 3 times the scrollWidth (room enough for both arrows and the thumb).
+-- Finally, we can call the inherited handler. Whew.
+
+on setboundsrect of me (a MacScrollBar), left, top, right, bottom Â
+      with physical phys with relative rel with justmoving moving
+   global scrollWidth
+   if moving equals true then
+      do inherited (me, left, top, right, bottom) Â
+         with physical phys with relative rel with justmoving moving
+   else
+      set x to right - left + 1
+      set y to bottom - top + 1
+      if (x > y) then set newOrientation to 'horizontal' Â
+                 else set newOrientation to 'vertical'
+      with lockedActor me
+         if newOrientation doesn't equal my orientation then Â
+            set my orientation to newOrientation
+         if newOrientation is one of
+            'vertical':
+               set x to scrollWidth
+               set y to max(y, scrollWidth * 3)
+               set the boundsRect of my scrollerBody to {0, scrollWidth - 1, Â
+                                                 x, y - scrollWidth + 1}
+               set the left of my thumb with resizing false to 0
+            'horizontal':
+               set y to scrollWidth
+               set x to max(x, scrollWidth * 3)
+               set the boundsRect of my scrollerBody to {scrollWidth - 1, 0, Â
+                                                 x - scrollWidth + 1, y}
+               set the top of my thumb with resizing false to 0
+            end if
+         set the boundsRect of my upArrow to {0, 0, scrollWidth, scrollWidth}
+         set the boundsRect of my downArrow to {x - scrollWidth, y - scrollWidth, x, y}
+      end with
+      do inherited (me, left, top, left + x, top + y) Â
+         with physical phys with relative rel with justmoving moving
+   end if
+end setboundsrect
+
+-- When the scroller has been resized, we just need to make sure that the pixelValue is
+-- correct, then update where the thumb is.
+
+on resized of me (a MacScrollBar)
+   do inherited
+   set pixelValue of me to my computePixelValue
+   update me
+end resized
+
+-- Just about all that this handler does is set the right fillColors and renderers
+-- for the scrollbar, according to whether it's horizontal or vertical. Pretty 
+-- self-explanatory.
+
+on set orientation of me (a MacScrollBar) to newValue
+   global scrollerLeftRenderer,   scrollerLeftPressedRenderer, Â 
+          scrollerLeftInactiveRenderer, scrollerRightRenderer,  Â
+          scrollerRightPressedRenderer, scrollerRightInactiveRenderer, Â
+          scrollerUpRenderer,     scrollerUpPressedRenderer,    Â
+          scrollerUpInactiveRenderer, scrollerDownRenderer,  Â
+          scrollerDownPressedRenderer,  scrollerDownInactiveRenderer, Â
+          scrollerHThumbRenderer, scrollerVThumbRenderer
+
+   with lockedActor me
+      if newValue is one of 
+         'horizontal':
+             set the normalRenderer of my upArrow to scrollerLeftRenderer
+             set the pressedRenderer of my upArrow to scrollerLeftPressedRenderer
+             set the inactiveRenderer of my upArrow to scrollerLeftInactiveRenderer
+             set the normalRenderer of my downArrow to scrollerRightRenderer
+             set the pressedRenderer of my downArrow to scrollerRightPressedRenderer
+             set the inactiveRenderer of my downArrow to scrollerRightInactiveRenderer
+             set the fillColor of my thumb to scrollerHThumbRenderer
+             set the direction of my upArrow to {-1, 0}
+             set the direction of my downArrow to {1, 0}
+         'vertical': 
+             set the normalRenderer of my upArrow to scrollerUpRenderer
+             set the pressedRenderer of my upArrow to scrollerUpPressedRenderer
+             set the inactiveRenderer of my upArrow to scrollerUpInactiveRenderer
+             set the normalRenderer of my downArrow to scrollerDownRenderer
+             set the pressedRenderer of my downArrow to scrollerDownPressedRenderer
+             set the inactiveRenderer of my downArrow to scrollerDownInactiveRenderer
+             set the fillColor of my thumb to scrollerVThumbRenderer
+             set the direction of my upArrow to {0, -1}
+             set the direction of my downArrow to {0, 1}
+      end if
+      if my isEnabled then
+         set the fillColor of my upArrow to my upArrow's normalRenderer
+         set the fillColor of my downArrow to my downArrow's normalRenderer
+      else 
+         set the fillColor of my upArrow to my upArrow's inactiveRenderer
+         set the fillColor of my downArrow to my downArrow's inactiveRenderer
+      end if
+   end with
+end set orientation
+
+-- Since the scroller object that we're inheriting from implements a proportional
+-- thumb, but the Mac scrollbar's thumb is always the same height, we need to 
+-- override this handler to basically do nothing.
+
+on bestSize of me (a MacScrollThumb)
+   set pixelValue of my container to computePixelValue of my container
+   update my container
+end bestSize
+
+on set highlight of me (a macScrollArrow) to newValue
+   do inherited
+   if newValue then
+      set my fillColor to my pressedRenderer
+   else 
+      set my fillColor to my normalRenderer
+   end if
+end set highlight
+
+-- Nothing very mystical. We just need to make sure to either increment or decrement
+-- the currentValue of the scrollbar according to which arrow is being pressed, as well
+-- as take care of highlighting the arrows when they're being pressed.
+
+on mouseDown of me (a MacScrollArrow)
+   global mouse
+   set my highlight to true
+   set {deltaX, deltaY} to my direction
+   if (deltaX = 1) or (deltaY = 1) then set offset to 1 Â
+                                   else set offset to -1
+   with lockedScroller my container
+      repeat
+         if findCurrentEventActor() equals me then
+            set my highlight to true
+            set my container's currentValue to my container's currentValue + offset
+            update my container
+         else
+            set my highlight to false
+         end if 
+      while down of mouse      
+   end with
+   set my highlight to false
+end mouseDown
+
+-- This routine is a little lengthy, because of the specific behavior that the
+-- scrollbar has to have. The only unusual thing here is the "wait 4 ticks" line
+-- which I put in just to simulate the real action a little bit more closely.
+
+on mouseDown of me (a MacScrollBody)
+   global mouse
+   set stepSize to my container's pageStep
+   set {mouseX, mouseY} to the location of the mouse
+   set {left, top, right, bottom} Â
+      to the boundsRect of my container's thumb with physical
+   if my container's orientation is one of 
+      'vertical':
+         if mouseY < top then set direction to 'up' Â
+                         else set direction to 'down'
+      'horizontal':
+         if mouseX < left then set direction to 'left' Â
+                          else set direction to 'right'
+   end if
+   with lockedScroller my container
+      repeat
+         if findCurrentEventActor() equals me then
+            if direction is one of 
+               'up':
+                  if top > mouseY then set my container's currentValue Â
+                     to my container's currentValue - stepSize
+               'down':
+                  if bottom < mouseY then set my container's currentValue Â
+                     to my container's currentValue + stepSize
+               'left':
+                  if left > mouseX then set my container's currentValue Â
+                     to my container's currentValue - stepSize
+               'right':
+                  if right < mouseX then set my container's currentValue Â
+                     to my container's currentValue + stepSize
+            end if
+            wait 4 ticks
+         end if
+         update my container
+         set {mouseX, mouseY} to the location of the mouse
+         set {left, top, right, bottom} to the boundsRect Â
+            of my container's thumb with physical
+      while down of mouse
+   end with
+end mouseDown
+
+-- Again, this is a long handler. It consists of 3 parts: setup, the loop, and cleanup. 
+-- In the setup, we just make sure that the shadow is going to be in the right place,
+-- as well as setting up the offset of the mouse from the top (or left) of the thumb.
+-- Then, as long as the mouse is down, we'll loop through--the shadow will stay visible
+-- as long as the mouse stays in the "active area" of the scrollbar, which is roughly
+-- 8 scrollWidths past the end of the scrollbar and 2 widths to either side. At the
+-- end, we need to make sure we move the thumb to where the shadow is, then set the
+-- current value of the scroller accordingly. 
+
+on mouseDown of me (a MacScrollThumb)
+   global mouse, scrollWidth
+   set orientation to my container's orientation
+   set shadow to my container's shadow
+   set shadow's boundsRect to my boundsRect
+   set my layer to 1
+   set shadow's layer to 2
+   show shadow
+   set {bodyLeft, bodyTop, bodyRight, bodyBottom} to the boundsRect of Â
+      my container's scrollerBody with physical
+   if my container's orientation is one of 
+      'horizontal':
+         set mouseOffset to (my left with physical) - h of mouse
+         set shadow's boundsRect with relative to {0,1,0,-1}
+      'vertical':
+         set mouseOffset to (my top with physical) - v of mouse
+         set shadow's boundsRect with relative to {1,0,-1,0}
+   end if
+
+   repeat
+      set {mouseX, mouseY} to the location of the mouse
+      if orientation is one of 
+         'vertical':
+            if (mouseX < bodyLeft -   2 * scrollWidth) or Â
+               (mouseX > bodyRight +  2 * scrollWidth) or Â
+               (mouseY < bodyTop -    8 * scrollWidth) or Â
+               (mouseY > bodyBottom + 8 * scrollWidth) then 
+                  hide shadow
+            else
+                show shadow
+                set shadow's top with physical with resizing false to Â
+                   min(max(mouseY + mouseOffset, bodyTop + 1), Â
+                       bodyBottom - (scrollWidth + 1))
+            end if
+         'horizontal':
+            if (mouseX < bodyLeft - 8   * scrollWidth) or Â
+               (mouseX > bodyRight + 8  * scrollWidth) or Â
+               (mouseY < bodyTop - 2    * scrollWidth) or Â
+               (mouseY > bodyBottom + 2 * scrollWidth) then 
+                  hide shadow
+            else
+                show shadow
+                set shadow's left with physical with resizing false to Â
+                   min(max(mouseX + mouseOffset, bodyLeft + 1), Â
+                       bodyRight - (scrollWidth + 1))
+            end if
+      end if
+   while down of mouse
+
+   if shadow's visible then
+      set my location to shadow's location
+      set my container's currentValue to my container's thumbPositionToCurrentValue
+   end if
+   hide shadow
+end mouseDown
+
+-- If the scrollbar isn't active, we just want to set the renderers for the direction
+-- arrows to their inactive renderers. The only catch is that if we're not enabled, 
+-- then we only want to show the arrows, instead of everything. 
+
+on set isActive of me (a MacScrollBar) to newValue
+   with lockedActor me
+      if newValue then 
+         if my isEnabled then 
+            set my mouseSensitivity to 'normal'
+            show everything in my contents 
+         else 
+            show my upArrow
+            show my downArrow
+         end if
+      else
+         set my mouseSensitivity to 'invisible'
+         hide everything in my contents
+      end if
+      do inherited
+   end with
+end set isActive
+
+-- Again, we're just sort of setting fillColors and showing things or not showing
+-- them. 
+
+on set isEnabled of me (a MacScrollBar) to newValue
+   with lockedActor me
+      if newValue then
+         set my upArrow's fillColor to the normalRenderer of my upArrow
+         set my downArrow's fillColor to the normalRenderer of my downArrow
+         if my isActive then
+            set my mouseSensitivity to 'normal'
+            show my thumb
+            show my scrollerBody
+         end if
+      else
+         set my mouseSensitivity to 'invisible'
+         set my upArrow's fillColor to the inactiveRenderer of my upArrow
+         set my downArrow's fillColor to the inactiveRenderer of my downArrow
+         hide my thumb
+         hide my scrollerBody
+      end if 
+      do inherited
+   end with
+end set isEnabled
+
+#|
+	Change History (most recent last):
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+	5  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

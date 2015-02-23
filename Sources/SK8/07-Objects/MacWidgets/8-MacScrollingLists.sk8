@@ -1,0 +1,98 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File:8-MacScrollingLists.sk8
+
+-- Created on 2-September-94 by John Lilly
+
+-- Questions or comments should be directed to Rick Evans (revans@taurus.apple.com)
+
+-- This file contains the SK8 definitions and handlers for the Macintosh standard
+-- scrolling list, such as you'd see in a standard file dialog box.
+
+--set MacScrollingListsLoaded to true
+
+-- As with all MacWidgets, we need to have the superclass MacWidget loaded in. 
+
+--if 'MacWidgetLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--      with project sk8
+
+-- For scrolling lists, we also need to make sure that scrollbars are loaded in.
+
+--if 'MacScrollbarsLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:2-MacScrollbars.sk8" Â
+--      with project sk8
+
+-- Like in the other files, these are just arbitrary constants that look reasonably
+-- good.
+
+global constant defaultWidth =  200
+global constant defaultHeight = 100
+
+-- Not much happening here; we're just defining a rectangle that will hold both the
+-- text list and the scrollbar.
+
+new rectangle with objectName "MacScrollingList" Â
+   with otherParents {MacWidget} Â
+   with doFirstClick true Â
+   with prototype true Â
+   with boundsRect {100,100,100 + defaultWidth,100 + defaultHeight}
+
+-- Here we're just using the standard MacScrollBar.
+
+new MacScrollBar with objectName "MacScrollingListScroller" Â
+   with container MacScrollingList
+
+tagPart MacScrollingList, MacScrollingListScroller, 'scroller'
+
+-- And the standard picker, except that the default font is slightly changed.
+
+new picker with objectName "MacScrollingListPicker" Â
+   with container MacScrollingList Â
+   with textFont "Chicago" Â
+   with textSize 12
+
+tagPart MacScrollingList, MacScrollingListPicker, 'textList'
+
+
+on initialize of me (a MacScrollingList), original, isNew, initArgs
+   -- When we get a new scrolling list, we need to connect the textList and the scroller, 
+   -- then call the resized handler to make sure that everything is in the right place.
+
+   do inherited
+   set the partnerVscroller of my textList to my scroller
+   resized me
+end initialize
+
+on items of me (a MacScrollingList)
+   -- Just a pass through routine.
+
+   return the items of my textList
+end items
+
+on set items of me (a MacScrollingList) to newValue
+   -- Again, just a pass through routine.
+
+   set the items of my textList to newValue
+end set items
+
+on resized of me (a MacScrollingList)
+   -- This is a really simple resized handler; we just need to make sure that the text
+   -- list leaves room for the scroller, then put the scroller on the right hand side.
+
+   global scrollWidth
+   set {width, height} to my size
+   set the boundsRect of my textList to {0, 0, width - scrollWidth + 1, height}
+   set the boundsRect of my scroller to {width - scrollWidth, 0, width, height}
+end resized
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

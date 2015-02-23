@@ -1,0 +1,130 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 4-MacPopups.sk8
+
+-- Created 28-June-94 by John Lilly
+
+-- Questions or comments should be addressed to Rick Evans (revans@taurus.apple.com)
+
+-- You need to make sure that the folder containing this file (MacWidgets)
+-- is in the same folder as the SK8 application.
+
+-- There are 2 ways to load this script file: (1) select "Load Script File..."
+-- from the File menu and select this file, or (2) type the following into
+-- the Message Box: 
+-- "LoadScriptFile "Sk8;MacWidgets:4-MacPopups.sk8" with project <your project>".
+
+-- The MacPopupMenu object is a menu with 3 default items that has a text title,
+-- along with a sk8 menu object.  The behaviors that have been added beyond those
+-- of a regular menu is that the current menu selection always shows in the menu
+-- title (as opposed to the text title), and when the user mouseDowns on the 
+-- menu the current selection is automatically checked. Otherwise, though, 
+-- MacPopupMenus pretty much act just like their sk8 counterparts.
+
+--set MacPopupsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--      with project sk8
+
+-- The following are all arbitrary constants, chosen just for the way that they 
+-- look.
+
+global defaultPopupHeight = 25
+global defaultPopupWidth = 150
+global rightHandGap = 3
+global bottomGap = 2
+global defaultMenuHeight = 17
+global defaultMenuWidth = 80
+
+new rectangle with objectName "MacPopupMenu" Â
+   with prototype true Â
+   with otherParents {MacWidget} Â
+   with doFirstClick true Â
+   with text "Untitled:" Â
+   with fillColor transparent Â
+   with frameSize {0,0} Â
+   with size {defaultPopupWidth, defaultPopupHeight} Â
+   with textLocation 'centerleft'
+
+new menu with objectName "MacPopupMenuMenu" Â
+   with prototype true Â
+   with container MacPopupMenu Â
+   with doFirstClick true Â
+   with fitToText false Â
+   with menutype 'popup' Â
+   with fillColor white Â
+   with boundsRect {defaultPopupWidth - rightHandGap - defaultMenuWidth, Â
+                    defaultPopupHeight - bottomGap - defaultMenuHeight, Â
+                    defaultPopupWidth - rightHandGap, Â
+                    defaultPopupHeight - bottomGap} Â
+   with text "Item1"
+
+tagPart MacPopupMenu, MacPopupMenuMenu, 'menu'
+
+-- We need a new class here, since we're going to be overriding handlers.
+
+new menuitem with objectName "MacMenuItem" 
+
+-- Just three default items, so that the object works "out of the box."
+
+new MacMenuItem with objectName "Item1" Â
+   with text "Item1" Â
+   with checkmark true Â
+   with Menu MacPopupMenu's menu
+
+new MacMenuItem with objectName "Item2" Â
+   with text "Item2" Â
+   with Menu MacPopupMenu's menu
+
+new MacMenuItem with objectName "Item3" Â
+   with text "Item3" Â
+   with Menu MacPopupMenu's menu
+
+on update of me (a MacPopupMenuMenu)
+   -- This routine gets called right before the menu is displayed.
+
+   set the checkmark of every item in my menuitems to false
+   set the checkmark of item my defaultMenuItem in my menuitems to true
+   do inherited
+end update
+
+on menuselect of me (a MacMenuItem)
+   -- Just takes care of showing the current selection in the menu text.
+
+   set my menu's text to my text
+   do inherited
+end menuselect
+
+on resized of me (a MacPopupMenu)
+   global rightHandGap, bottomGap
+   do inherited
+   set the location of my menu to {my width - rightHandGap - my menu's width / 2, Â
+                                   my height / 2}
+end resized
+
+on set isActive of me (a MacPopupMenu) to newValue
+   global GrayTone50, Black
+   with lockedActor me
+      if newValue equals false then
+         set my menu's arrowColor to GrayTone50
+         set my menu's textColor to GrayTone50
+         set my menu's frameColor to GrayTone50
+      else
+         set my menu's arrowColor to Black
+         set my menu's textColor to Black
+         set my menu's frameColor to Black
+      end if
+      do inherited
+   end with
+end set isActive
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

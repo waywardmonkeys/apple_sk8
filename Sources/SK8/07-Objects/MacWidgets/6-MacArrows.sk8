@@ -1,0 +1,190 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 6-MacArrows.sk8
+
+-- Created on 18-July-94 by John Lilly
+
+-- Questions or comments should be addressed to Rick Evans (revans@taurus.apple.com)
+
+-- This file contains the SK8 definitions and handlers for the progressive
+-- disclosure triangles used by the finder to show hierarchical folder views.
+
+--set MacArrowsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--     with project sk8
+
+-- The first thing that we need to do is load in the renderers for the arrow
+-- animations.
+
+new IconRsrc with objectName "MacFinderFilledClosedQD" Â
+   with file (file of sk8) Â
+   with resourceID 15200
+
+new ImageRenderer with objectName "MacFinderFilledClosedArrow" Â
+   with media MacFinderFilledClosedQD Â
+   with renderStyle 'renderUnstretched' Â
+   with backgroundRenderer transparent 
+
+new IconRsrc with objectName "MacFinderFilledInBetweenQD" Â
+   with file (file of sk8) Â
+   with resourceID 201
+
+new ImageRenderer with objectName "MacFinderFilledInBetweenArrow" Â
+   with media MacFinderFilledInBetweenQD Â
+   with renderStyle 'renderUnstretched' Â
+   with backgroundRenderer transparent 
+
+new IconRsrc with objectName "MacFinderFilledOpenQD" Â
+   with file (file of sk8) Â
+   with resourceID 202
+
+new ImageRenderer with objectName "MacFinderFilledOpenArrow" Â
+   with media MacFinderFilledOpenQD Â
+   with renderStyle 'renderUnstretched' Â
+   with backgroundRenderer transparent
+
+new ImageRenderer with objectName "MacFinderOpenArrow" Â
+   with media FinderOpenArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new ImageRenderer with objectName "MacFinderInBetweenArrow" Â
+   with media FinderInBetweenArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new ImageRenderer with objectName "MacFinderClosedArrow" Â
+   with media FinderClosedArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new ImageRenderer with objectName "MacFinderEmptyOpenArrow" Â
+   with media FinderEmptyOpenArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new ImageRenderer with objectName "MacFinderEmptyInBetweenArrow" Â
+   with media FinderEmptyInBetweenArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new ImageRenderer with objectName "MacFinderEmptyClosedArrow" Â
+   with media FinderEmptyClosedArrowCIcon Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+
+-- No big mystery; the arrow is just a rectangle with special renderers and mousedown
+-- handlers.
+
+new rectangle with objectName "MacFinderArrow" Â
+   with otherParents {MacWidget} Â
+   with size {16,16} Â
+   with frameSize {0,0} Â
+   with fillColor MacFinderClosedArrow Â
+   with inverts false Â
+   with autohighlight false Â
+   with doFirstClick true Â
+   with prototype true
+
+-- Just need a little bit of info about whether the arrow is open or closed.
+
+addProperty MacFinderArrow, 'state' with initialValue 'closed'
+
+on set highlight of me (a MacFinderArrow) to newValue
+   -- Since the highlight of the arrow doesn't quite work like anything else,
+   -- we just need this small handler.
+
+   global MacFinderFilledOpenArrow, MacFinderOpenArrow
+   global MacFinderFilledClosedArrow, MacFinderClosedArrow
+   global MacFinderEmptyClosedArrow, MacFinderEmptyOpenArrow
+   
+   if newValue equals true then 
+         if my state is one of
+            'closed', false:
+               set my fillColor to MacFinderFilledClosedArrow
+            'open':   
+               set my fillColor to MacFinderFilledOpenArrow
+         end if
+      else
+         if my state is one of
+            'closed', false:
+               set my fillColor to MacFinderEmptyClosedArrow
+            'open':   
+               set my fillColor to MacFinderEmptyOpenArrow
+         end if
+   end if
+   do inherited
+end set highlight
+
+
+on mouseDown of me (a MacFinderArrow)
+   -- This just takes care of the highlighting, then once the user lets go of the mouse,
+   -- we have two possible conditions: either the mouse is currently over the arrow, or
+   -- it isn't. If it isn't, then we just need to set the fillColor of the arrow to it's
+   -- standard fillColor. If the mouse IS currently over the arrow, then we need to 
+   -- animate the arrow.
+
+   global mouse, MacFinderClosedArrow, MacFinderOpenArrow
+
+   repeat until up of mouse
+      if findCurrentEventActor() equals me then
+         set my highlight to true
+      else
+         set my highlight to false
+      end if
+   end repeat
+   if findCurrentEventActor() doesn't equal me then
+      if my state is one of 
+         'closed', false:
+            set my fillColor to MacFinderClosedArrow
+         'open':
+            set my fillColor to MacFinderOpenArrow
+      end if
+   else 
+      animate me
+   end if
+end mouseDown
+
+on animate of me (a MacFinderArrow)
+   -- This routine just checks the state of the arrow and does the animation to make
+   -- it move to the other state.
+
+   global MacFinderClosedArrow, MacFinderOpenArrow, MacFinderFilledOpenArrow
+   global MacFinderFilledClosedArrow, MacFinderFilledInBetweenArrow
+
+   if my state is one of 
+      'closed', false:
+         set my fillColor to MacFinderFilledClosedArrow
+         wait 1 tick
+         set my fillColor to MacFinderFilledInBetweenArrow
+         wait 1 tick
+         set my fillColor to MacFinderFilledOpenArrow
+         wait 8 ticks
+         set my fillColor to MacFinderOpenArrow
+         set my state to 'open'
+      'open':
+         set my fillColor to MacFinderFilledOpenArrow
+         wait 1 tick
+         set my fillColor to MacFinderFilledInBetweenArrow
+         wait 1 tick
+         set my fillColor to MacFinderFilledClosedArrow
+         wait 8 ticks
+         set my fillColor to MacFinderClosedArrow
+         set my state to 'closed'
+   end if
+end animate   
+
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

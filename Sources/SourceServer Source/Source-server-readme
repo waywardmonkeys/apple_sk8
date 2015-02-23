@@ -1,0 +1,32 @@
+The source server directory contains:
+
+
+1)  MCL files comprising an interface to projector that has been in use at Apple Eastern Research for some time, but which is still under development.
+
+2)  Sourceserver-command.lisp, also in use at ATG East. Here we redefine the function MPW-COMMAND to call the function SOURCESERVER-COMMAND causing the projector interface to communicate with Sourceserver rather than MPW.
+
+3)  A few utility files. The file sysequ.lisp is also in the Additional MCL Source Code folder.
+
+
+SourceServer is an application that allows development environments and other applications to access MPW Projector project management capabilities via Apple Events.  Development environments and applications have access to the full functionality of Projector including the ability to create project databases, as well as checking in and out individual files. Both MPW and other development environments can share the same project database using SourceServer.  An alpha version of SourceServer is available on E.T.O. (Essentials - Tools - Objects), a CD-ROM subscripion series distributed by Apple through APDA.
+
+This  MCL code was written to use SourceServer 1.0a1, which was distributed in the MPW PQR 7 folder on E.T.O. #7.
+
+To try it out in MCL,  open the file "load-SourceServer.lisp" in the SourceServer folder. Change the LOGICAL-PATHNAME-TRANSLATIONS for "SSRoot" to whatever, change the three SETQ's at the end to whatever is appropriate and evaluate the buffer. (Command-h or "Eval buffer" on the Eval menu). Of course, you will also need the SourceServer application. It will be launched automatically when it is needed.
+
+The variable *my-projects* is a list of 2 element lists. In each sublist first is the directory containing the project database,  second is the directory containing your local copies of the project files. If you do not have any projects, set *my-projects* to nil, and
+use New Project on the SourceServer menu to create a new project.
+
+The first four menu items on the SourceServer menu apply to the active (front most) window. If the active window corresponds to a file in the local directory of one of *my-projects*, the first 3 of these will be enabled, otherwise disabled.
+
+To add a file to a project, place it in the local directory for that project, open the file in a fred-window and choose Checkin Active on the SourceServer menu.
+
+I haven't a clue how to remove a file from a project. Perhaps you can't.
+
+N.B. The MCL code is known to be buggy. 
+     Strongly recommend using directory names CONTAINING NO SPACES.
+
+
+ 
+
+ 

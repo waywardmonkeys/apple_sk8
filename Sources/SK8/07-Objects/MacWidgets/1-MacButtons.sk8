@@ -1,0 +1,195 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 1-MacButtons.sk8
+
+-- Created 15-June-94 by John Lilly
+
+-- Questions or comments should be directed to Rick Evans (revans@taurus.apple.com)
+
+-- This file contains the definitions and handlers for the Macintosh standard
+-- dialog elements: buttons, check boxes, and radio buttons.
+
+-- You need to make sure that the folder containing this file (MacWidgets)
+-- is in the same folder as the SK8 application.
+
+-- There are 2 ways to load this script file: (1) select "Load Script File..."
+-- from the File menu and select this file, or (2) type the following into
+-- the Message Box: 
+-- "LoadScriptFile "Sk8;MacWidgets:1-MacButtons.sk8" with project <your project>".
+
+--set MacButtonsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--   with project sk8
+
+--------------------------
+--Standard Dialog Button--
+--------------------------
+
+-- In addition to being able to set isActive for buttons, you can also
+-- set isDefault to be either true or false. True means that the button will
+-- have the thicker outer frame that indicates the button is the default.
+-- The other extra handler for buttons is called "keyboardEquivalent", and
+-- will cause the button to be highlighted for 8 ticks (as per the Macintosh
+-- Human Interface Guidelines) as in the case where someone presses return
+-- for the default (or hits <esc> to cancel).
+
+global constant dButtonWidth = 59
+global constant dButtonHeight = 20
+global constant defaultX = 100
+global constant defaultY = 100
+
+new MacWidget with objectname "MacButton" Â
+   with otherParents {roundRect} Â
+   with framesize {0, 0} Â
+   with fillColor white Â
+   with doFirstClick true Â
+   with prototype true Â
+   with isActive true Â
+   with boundsRect {defaultX, defaultY, Â
+                    defaultX + dButtonWidth, defaultY + dButtonHeight}
+
+addProperty MacButton, 'isDefault' with initialValue false
+
+new RoundRect with objectname "activeArea" Â
+   with boundsRect {0, 0, 0, 0} Â
+   with frameSize {1, 1} Â
+   with container MacButton Â
+   with text "Untitled" Â
+   with autohighlight true Â
+   with inverts false 
+
+tagPart MacButton, activeArea, 'inside'
+
+on resized of me (a MacButton) 
+   lock me
+   set {x1, y1, x2, y2} to my boundsRect
+   set my inside's roundedness to my roundedness
+   if (my isDefault) then
+      set my inside's boundsRect to {4, 4, x2 - x1 - 4, y2 - y1 - 4}
+   else 
+      set my inside's boundsRect to {0, 0, x2 - x1, y2 - y1}
+   end if
+   unlock me
+end resized
+
+on keyboardEquivalent of me (a MacButton) 
+   -- This should be activated if the user uses a keyboard equivalent of
+   -- the button (e.g. presses Return for the default button). It simply
+   -- highlights the button for a while, then goes away.
+
+   set my inside's highlight to true
+   wait 8 ticks
+   set my inside's highlight to false
+end keyboardEquivalent
+
+on set isDefault of me (a MacButton) to newValue
+   -- Just makes a button look like a default button by giving it an outer
+   -- halo that is 3 pixels wide.
+
+   if (newValue doesn't equal my isDefault) then
+      lock me
+      if (newValue) then
+            set my boundsRect with relative to {-4, -4, 4, 4}
+            set my framesize to {3,3}
+            set my inside's boundsRect with relative to {4, 4, -4, -4}
+      else
+            set my boundsRect with relative to {4, 4, -4, -4}
+            set my framesize to {0, 0}
+            set my inside's boundsRect with relative to {-4, -4, 4, 4}
+      end if
+      unlock me
+   end if 
+   do inherited
+end set isDefault      
+
+on set isActive of me (a MacButton) to newValue
+   -- Like all MacWidgets, setting isActive to true makes that widget
+   -- available for interaction, while setting it to false makes it 
+   -- invisible to the mouse.
+
+   global Black
+   global GrayTone50
+   if (newValue doesn't equal my isActive) then
+      if (newValue) then 
+         set my Inside's textColor to Black
+         set my frameColor to Black
+         set my mouseSensitivity to 'normal'
+      else
+         set my Inside's textColor to GrayTone50
+         set my frameColor to GrayTone50
+         set my mouseSensitivity to 'invisible'
+      end if
+   end if
+   do inherited
+end set isActive
+
+on set text of me (a MacButton) to newValue
+   -- Just a pass through hanlder.
+
+   set my Inside's text to newValue
+end set text
+
+on set highlight of me (an activeArea) to newValue
+   -- The only reason that we needed to override this handler is 1 pixel--
+   -- the default behavior is to invert the frame as well as the interior, 
+   -- but we just want the interior inverted, and the frame to stay black.
+
+   global black
+   global white
+   do inherited
+   if newValue then 
+      set my fillcolor to black
+      set my textcolor to white
+   else 
+      set my fillColor to white
+      set my textColor to black
+   end if
+end set highlight
+
+on mouseDown of me (an activeArea)
+   do inherited
+   if findCurrentEventActor() equals me then doAction of my container
+end mouseDown
+
+on doAction of me (a MacButton)
+  -- Doesn't do anything by default
+end doAction
+
+
+
+----------------------
+--Standard Check Box-- 
+----------------------
+
+--Leverages off of the SK8 widget CheckBox
+
+new CheckBox with objectName "MacCheckBox" Â
+   with checkColor Black Â
+   with doFirstClick true Â
+   with prototype true Â
+   with otherParents {MacWidget}
+
+
+-------------------------
+--Standard Radio Button--
+-------------------------
+
+--Again, it leverages off of the SK8 widget RadioButton
+
+new RadioButton with objectName "MacRadioButton" Â
+   with doFirstClick true Â
+   with prototype true Â
+   with otherParents {MacWidget}
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

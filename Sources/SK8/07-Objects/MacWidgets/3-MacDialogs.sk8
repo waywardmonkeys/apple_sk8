@@ -1,0 +1,259 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 3-MacDialogs.sk8
+
+-- Created 21-June-94 by John Lilly
+
+-- Comments or questions should be directed to Rick Evans (revans@taurus.apple.com)
+
+-- You need to make sure that the folder containing this file (MacWidgets)
+-- is in the same folder as the SK8 application.
+
+-- There are 2 ways to load this script file: (1) select "Load Script File..."
+-- from the File menu and select this file, or (2) type the following into
+-- the Message Box: 
+-- "LoadScriptFile "Sk8;MacWidgets:3-MacDialogs.sk8" with project <your project>".
+
+-- This file contains the object and handler definitions for Macintosh style 
+-- dialog windows, including Alert Boxes, Modal Dialogs, and Movable Modal 
+-- Dialogs.
+
+-- NOTE: Modeless dialogs are not yet implemented.
+
+-- The interesting things about these objects are that the "Cancel"
+-- buttons on each cause the dialog to go away (actually be hidden), and that the
+-- MacAlertBox has 3 possible types of icon--'note', which is the person's head
+-- with the speech bubble, 'caution', which is the caution sign, and 'stop', which
+-- is the stop sign.  These can be switched between by changing the alertType 
+-- property of a MacAlertBox object. In addition, you can also get the brand new
+-- color versions of these icons by prepending color to types (i.e. 'colorCaution', 
+-- 'colorNote', and 'colorStop').
+
+--set MacDialogsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--      with project sk8
+
+--if 'MacButtonsLoaded' is not bound then Â
+--   LoadScriptFile "SK8;MacWidgets:1-MacButtons.sk8" Â
+--      with project sk8
+
+-- We need to load in the 6 possible icons for the alert box.
+ 
+new QDPicture with objectName "MacAlertStopQD" Â
+   with file (file of sk8) Â
+   with resourceID 134
+
+new ImageRenderer with objectName "MacAlertStopRenderer" Â
+   with media MacAlertStopQD
+
+new QDPicture with objectName "MacAlertNoteQD" Â
+   with file (file of sk8) Â
+   with resourceID 135
+
+new ImageRenderer with objectName "MacAlertNoteRenderer" Â
+   with media MacAlertNoteQD
+
+new QDPicture with objectName "MacAlertCautionQD" Â
+   with file (file of sk8) Â
+   with resourceID 136
+
+new ImageRenderer with objectName "MacAlertCautionRenderer" Â
+   with media MacAlertCautionQD
+
+new QDPicture with objectName "MacAlertStopColorQD" Â
+   with file (file of sk8) Â
+   with resourceID 137
+
+new ImageRenderer with objectName "MacAlertStopColorRenderer" Â
+   with media MacAlertStopColorQD
+
+new QDPicture with objectName "MacAlertNoteColorQD" Â
+   with file (file of sk8) Â
+   with resourceID 138
+
+new ImageRenderer with objectName "MacAlertNoteColorRenderer" Â
+   with media MacAlertNoteColorQD
+
+new QDPicture with objectName "MacAlertCautionColorQD" Â
+   with file (file of sk8) Â
+   with resourceID 139
+
+new ImageRenderer with objectName "MacAlertCautionColorRenderer" Â
+   with media MacAlertCautionColorQD
+
+-- Constants and defaults
+
+-- In the Macintosh Human Interface Guidelings, the shape of the alert box and 
+-- the positions of its elements are defined by two constants, in pixels, which 
+-- they call A and B. (refer to page 197) 
+
+global constant widthA = 13  
+global constant widthB = 23 
+global constant dIconSize = 32
+
+-- These two constants are just arbitrary numbers that I selected because they
+-- look reasonably good.
+
+global constant dAlertWidth = 350
+global constant dAlertHeight = 100
+
+
+-- The MacDialog class serves as a parent for each of the Dialog classes--the
+-- MovableModal, the Modal, and the Alert Box (which is sort of a special case
+-- of the Modal Dialog). The modeless dialog hasn't been implemented yet.
+
+
+new rectangle with objectName "MacDialog" Â
+   with otherParents {MacWidget} Â
+   with boundsRect {100, 100, 100 + dAlertWidth, 100 + dAlertHeight} Â
+   with mouseSensitivity 'normal' Â
+   with frameSize {0, 0} Â
+   with fillColor white
+
+new MacButton with objectName "macDialogOKButton" Â
+   with container MacDialog Â
+   with text "OK" Â
+   with isActive true Â
+   with boundsRect {dAlertWidth - widthA - dButtonWidth, Â
+                    dAlertHeight - widthA - dButtonHeight, Â
+                    dAlertWidth - widthA, Â
+                    dAlertHeight - widthA}
+
+set isDefault of MacDialogOKButton to true  
+
+tagPart MacDialog, macDialogOKButton, 'OKButton'
+
+new MacButton with objectName "macDialogCancelButton" Â
+   with container MacDialog Â
+   with text "Cancel" Â
+   with isActive true Â
+   with isDefault false Â
+   with boundsRect {dAlertWidth - (2 * widthA) - (2 * dButtonWidth), Â
+                    dAlertHeight - widthA - dButtonHeight, Â
+                    dAlertWidth - (2 * widthA) - dButtonWidth, Â
+                    dAlertHeight - widthA}
+
+tagPart MacDialog, macDialogCancelButton, 'cancelButton'
+
+on resized of me (a MacDialog) 
+   -- This handler isn't anything very complicated--we're just making sure 
+   -- that the OK and Cancel buttons stay in the right place in the lower right
+   -- corner of the dialog. If that isn't the behavior that you're trying to get, 
+   -- just override this handler.
+
+   global dButtonWidth, dButtonHeight, widthA, widthB
+   set {x, y} to the size of me
+   if (my OKButton doesn't equal false) then Â
+      set my OKButton's location to {x - widthA - dButtonWidth/2.0, Â
+                                     y - widthA - dButtonHeight/2.0}
+   if (my CancelButton doesn't equal false) then Â
+      set my CancelButton's location to {x - 2.0 * widthA - 1.5 * dButtonWidth, Â
+                                         y - widthA - dButtonHeight/2.0}
+   do inherited
+end resized
+
+on mouseDown of me (a MacDialogCancelButton)
+   -- The default behavior of the cancel button is simply to hide the dialog.
+   do inherited
+   hide my container
+end mouseDown
+
+new MacDialog with objectName "MacModalDialog" Â
+   with prototype true Â
+   with doFirstClick true Â
+   with isActive true Â
+   with windowStyle 'doubleEdgeBox'
+
+new MacDialog with objectName "MacMovableModalDialog" Â
+   with prototype true Â
+   with doFirstClick true Â
+   with isActive true Â
+   with windowStyle 'movabledialog' Â
+   with windowTitle "Movable Dialog"
+
+new MacDialog with objectName "MacAlertBox" Â
+   with prototype true Â
+   with doFirstClick true Â
+   with isActive true Â
+   with windowStyle 'doubleEdgeBox'
+
+addProperty MacAlertBox, 'alertType' with initialValue 'note'
+
+new editText with objectName "MacAlertMessageText" Â
+   with container MacAlertBox Â
+   with boundsRect {dIconSize + 2 * widthB, Â
+                    widthA, Â
+                    dAlertWidth - widthA, Â
+                    dAlertHeight - 2 * widthA - dButtonHeight} Â 
+   with textfont "Chicago" Â
+   with textsize 12 Â
+   with textStyle {} Â
+   with frameSize {0, 0} Â
+   with fillColor White Â
+   with text "This is a standard Macintosh alert box."
+
+tagPart MacAlertBox, MacAlertMessageText, 'messageText'
+
+new rectangle with objectName "MacAlertIcon" Â
+   with frameSize {0, 0} Â
+   with container MacAlertBox Â
+   with boundsRect {widthB, widthA, widthB + dIconSize, widthA + dIconSize} Â
+   with fillColor MacAlertNoteRenderer
+
+addProperty MacAlertIcon, 'alertType'
+
+tagPart MacAlertBox, MacAlertIcon, 'typeIcon'
+
+on initialize of me (a MacAlertBox) , original, isNew, initArgs
+   -- Just puts in a default message, and then locks it so that the user can't
+   -- change it.
+
+   do inherited
+   set my messageText's text to "This is a standard Macintosh alert box."
+   locktext of my messageText
+end initialize
+
+on set alertType of me (a MacAlertBox) to newValue
+   -- All this does is change the renderer of the alert icon. If newValue isn't
+   -- one of the accepted values, we don't change anything.
+
+   global MacAlertNoteRenderer, MacAlertNoteColorRenderer
+   global MacAlertCautionRenderer, MacAlertCautionColorRenderer
+   global MacAlertStopRenderer, MacAlertStopColorRenderer
+
+   if newValue is one of 
+      'note'   : set the fillColor of my typeIcon to MacAlertNoteRenderer
+      'caution': set the fillColor of my typeIcon to MacAlertCautionRenderer
+      'stop'   : set the fillColor of my typeIcon to MacAlertStopRenderer
+      'colorNote'   : set the fillColor of my typeIcon to macAlertNoteColorRenderer
+      'colorCaution': set the fillColor of my typeIcon to macAlertCautionColorRenderer
+      'colorStop'   : set the fillColor of my typeIcon to macAlertStopColorRenderer
+   end if
+   do inherited
+end set alertType      
+
+on resized of me (a MacAlertBox)
+   -- In addition to doing the inherited behavior of setting the button positions, 
+   -- we also need to set the size of the message text.
+
+   global dIconSize, dButtonHeight, widthA, widthB
+   set {x, y} to the size of me
+   set the boundsRect of my messageText to {dIconSize + 2 * widthB, Â
+                                            widthA - 3, Â
+                                            x - widthA, Â
+                                            y - 2 * widthA - dButtonHeight}
+   do inherited
+end resized   
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

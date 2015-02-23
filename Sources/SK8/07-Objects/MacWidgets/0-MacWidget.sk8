@@ -1,0 +1,89 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+-- File: 0-MacWidget.sk8
+
+-- Created 27-July-94 by John Lilly
+
+-- Questions or comments should be addressed to Rick Evans (revans@taurus.apple.com)
+
+-- This set of files defines a set of objects called MacWidgets--these 
+-- are standard Macintosh interface elements (e.g. scrollbars, buttons,
+-- dialog boxes) for use in the SK8 development environment. I've taken
+-- great care trying to insure that each element acts as much like its
+-- toolbox counterpart as possible--please let me know if you notice any
+-- anomalies.
+
+-- As of today (8-SEP-94), the set contains the following files:
+
+  -- README               
+  -- 0-MacWidget.sk8         (this file)
+  -- 1-MacButtons.sk8        (contains push buttons, radio buttons, and check boxes)
+  -- 2-MacScrollbars.sk8     (definitions for scrollbars)
+  -- 3-MacDialogs.sk8        (contains modal dialogs and alert boxes)
+  -- 4-MacPopups.sk8         (contains popup menus)
+  -- 5-MacIndicators.sk8     (contains 2 types of Mac progress indicators)
+  -- 6-MacArrows.sk8         (contains the progressive disclosure triangle (from the finder))
+  -- 8-MacScrollingLists.sk8 (contains scrolling lists)
+
+-- Eventually, the set will contain all of the following widgets:
+
+  -- Editable Text Fields
+  -- Sliders
+  -- Icon Buttons
+
+-- Files which are referenced in some of the above files are hardcoded in.  That is,
+-- they depend on everything being in a folder called MacWidgets which belongs in the 
+-- same folder as SK8. So just take the folder that all of these are in and drop it
+-- into the SK8 folder, and everything should work just fine. To load a specific file
+-- while you're in SK8, just select "Load Script File..." from the File
+-- menu and select the appropriate file.
+
+
+
+
+-- This file contains the definition for the "MacWidget" object, which 
+-- is the ancestor of every object that I'm building for this MacWidget
+-- library. The script in this file will get loaded automatically by the 
+-- first MacWidget file that gets loaded that needs it. For example, to 
+-- use the indicator objects, all you have to do is load the script file
+-- "5-MacIndicators.sk8" and this file will be loaded as well.
+
+
+-- The first thing that we want to do is set the loaded variable to 
+-- true, signifying that this file has, in fact, already been loaded.
+
+-- For EVERY MacWidget, you can always deactivate the object by setting
+-- that object's property 'isActive' to false. For instance for buttons,
+-- that means that the text (and the outer frame for default buttons)
+-- will be grayed out and the button will not respond to mouse clicks.
+
+--set MacWidgetLoaded to true
+
+new object with objectName "MacWidget"
+
+addProperty MacWidget, 'isActive' with initialValue true
+
+on set isActive of me (a MacWidget) to newValue
+   global Black
+   global GrayTone50
+   if (newValue doesn't equal my isActive) then
+      if (newValue) then
+         set my textColor to Black
+         set my mouseSensitivity to 'normal'
+      else 
+         set my textColor to GrayTone50
+         set my mouseSensitivity to 'invisible'
+      end if
+   end if
+   do inherited
+end set isActive
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	Removing old copyright notice.
+	4  	 2/27/97	Hernan  	
+|# ;(do not edit past this line!!)

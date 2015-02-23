@@ -1,0 +1,385 @@
+--- SK8 © 1997 by Apple Computer, Inc.
+--- The code in this file is protected under the terms of the current SK8 License.
+--- For information on this license, see http://sk8.research.apple.com
+--- Apple Computer, Inc. -- Apple Research Laboratories
+
+
+-- File: 5-MacIndicators.sk8
+
+-- Created on 13-July-94 by John Lilly
+
+-- Questions or comments should be addressed to Rick Evans (revans@taurus.apple.com)
+
+-- This file contains the SK8 definitions and handlers for three progress indicators
+-- which usually appear in dialog boxes: the definite indicator (often referred to 
+-- as the thermometer), an indefinite indicator (often referred to as the barber
+-- pole), and a circular indefinite indicator (like you can find in either the new
+-- (system 7.5) find file or in some PowerTalk applications).
+
+-- From an implementation standpoint, the first is implemented one way, but the second
+-- two are basically both just animations, so for them I define a general animation
+-- class, and from that, it's simple to define either.
+
+-- You need to make sure that the folder containing this file (MacWidgets)
+-- is in the same folder as the SK8 application.
+
+-- There are 2 ways to load this script file: (1) select "Load Script File..."
+-- from the File menu and select this file, or (2) type the following into
+-- the Message Box: 
+-- "LoadScriptFile "Sk8;MacWidgets:5-MacIndicators.sk8" with project <your project>".
+
+--set MacIndicatorsLoaded to true
+
+--if 'MacWidgetLoaded' is not bound then LoadScriptFile "SK8;MacWidgets:0-MacWidget.sk8" Â
+--   with project sk8
+
+-- The first thing that we need to do is load in the renderers for the barber
+-- pole stages
+
+new QDPicture with objectName "barber1QD" Â
+   with file (file of sk8) Â
+   with resourceID 143
+
+new ImageRenderer with objectName "barber1Renderer" Â
+   with media barber1QD Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new QDPicture with objectName "barber2QD" Â
+   with file (file of sk8) Â
+   with resourceID 142
+
+new ImageRenderer with objectName "barber2Renderer" Â
+   with media barber2QD Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new QDPicture with objectName "barber3QD" Â
+   with file (file of sk8) Â
+   with resourceID 141
+
+new ImageRenderer with objectName "barber3Renderer" Â
+   with media barber3QD Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new QDPicture with objectName "barber4QD" Â
+   with file (file of sk8) Â
+   with resourceID 140
+
+new ImageRenderer with objectName "barber4Renderer" Â
+   with media barber4QD Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+-- This is the color that the definite indictor is.
+
+new RGBColor with objectName "MacIndicatorBlue" Â
+   with foreblue 65535 Â
+   with foregreen 52428 Â
+   with forered 52428
+
+-- And the following are the resources that we need for the circular indicator.
+
+new IconRsrc with objectName "MacRoundIndicatorQD1" Â
+   with file (file of sk8) Â
+   with resourceID 203
+
+new ImageRenderer with objectName "MacRoundIndicator1Renderer" Â
+   with media MacRoundIndicatorQD1 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD2" Â
+   with file (file of sk8) Â
+   with resourceID 204
+
+new ImageRenderer with objectName "MacRoundIndicator2Renderer" Â
+   with media MacRoundIndicatorQD2 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD3" Â
+   with file (file of sk8) Â
+   with resourceID 205
+
+new ImageRenderer with objectName "MacRoundIndicator3Renderer" Â
+   with media MacRoundIndicatorQD3 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD4" Â
+   with file (file of sk8) Â
+   with resourceID 206
+
+new ImageRenderer with objectName "MacRoundIndicator4Renderer" Â
+   with media MacRoundIndicatorQD4 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD5" Â
+   with file (file of sk8) Â
+   with resourceID 207
+
+new ImageRenderer with objectName "MacRoundIndicator5Renderer" Â
+   with media MacRoundIndicatorQD5 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD6" Â
+   with file (file of sk8) Â
+   with resourceID 208
+
+new ImageRenderer with objectName "MacRoundIndicator6Renderer" Â
+   with media MacRoundIndicatorQD6 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD7" Â
+   with file (file of sk8) Â
+   with resourceID 209
+
+new ImageRenderer with objectName "MacRoundIndicator7Renderer" Â
+   with media MacRoundIndicatorQD7 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+new IconRsrc with objectName "MacRoundIndicatorQD8" Â
+   with file (file of sk8) Â
+   with resourceID 210
+
+new ImageRenderer with objectName "MacRoundIndicator8Renderer" Â
+   with media MacRoundIndicatorQD8 Â
+   with backgroundRenderer transparent Â
+   with renderStyle 'renderUnstretched'
+
+--------------------------
+-- MacProgressIndicator --
+--------------------------
+
+new rectangle with objectName "MacProgressIndicator" Â
+   with otherParents {macWidget} Â
+   with boundsRect {100, 100, 288, 111} Â
+   with fillColor macIndicatorBlue Â
+   with frameSize {1, 1} Â
+   with frameColor black Â
+   with prototype true
+
+addProperty MacProgressIndicator, 'percentDone' with initialValue 0
+
+-- We'll need a rectangle for the done portion of the indicator.
+
+new rectangle with objectName "MacProgressIndicatorDone" Â
+   with container MacProgressIndicator Â
+   with boundsRect {0, 0, 0, 11} Â
+   with fillColor GrayTone25 Â
+   with frameSize {0, 0}
+
+tagPart macProgressIndicator, macProgressIndicatorDone, 'donePart'
+
+on set percentDone of me (a MacProgressIndicator) Â
+   with drawSmooth: smooth (defaulting to true) Â
+   with force: ignorePrevious (defaulting to false) Â
+   to newValue
+
+   -- This handler sets how much of the indicator is gray ('done'), as a number out of 100.
+   -- So if you're half done, pass this handler the number 50. There are two optional
+   -- parameters: drawSmooth, which defaults to true, and force, which defaults to false. 
+   -- If drawSmooth is true, then the change in percentDone is animated gradually, and
+   -- if it's false, then it simply jumps to the new value. The handler usually checks to see if
+   -- the new percentDone is different than the old percentDone, and setting force to true just
+   -- tells the handler to do the change regardless. That's really only used from the resized
+   -- handler, since when you change the size the percentDone will not change, but the size of
+   -- the donePart should.
+
+   if (newValue equals my percentDone) and (ignorePrevious equals false) then return
+   if newValue < my percentDone then set multiplier to -1 Â
+                                else set multiplier to 1
+   set pixelsPerPercent to the width of me / 100
+   set tempPercent to my percentDone
+
+   if not smooth then 
+      set the boundsRect of my donePart to {0, 0, newValue * pixelsPerPercent, my height}
+   else 
+      repeat while ((multiplier * tempPercent) <= (multiplier * newValue))
+         tickEventClock
+         set the boundsRect of my donePart with relative to {0,0,multiplier,0}
+         set tempPercent to tempPercent + (multiplier/pixelsPerPercent)
+      end repeat
+   end if
+   do inherited
+end set percentDone
+
+on resized of me (a MacProgressIndicator)
+   -- Doesn't really do very much. Just makes sure that the donePart stays in proportion to the 
+   -- rest of the indicator.
+
+   do inherited
+   set the height of my donePart to my height
+   set percentDone of me with drawSmooth false with force true to my percentDone
+end resized
+
+--------------------------------
+-- MacProgressIndicatorDialog --
+--------------------------------
+
+new Rectangle with objectName "MacProgressIndicatorDialog" Â
+    with windowStyle 'movableDialog' Â
+    with boundsRect {100,100,400,200} Â
+    with floating
+
+new MacProgressIndicator with objectname "MacProgressDialogIndicator" Â
+	with container MacProgressIndicatorDialog
+tagPart MacProgressIndicatorDialog, MacProgressDialogIndicator, 'indicator'
+
+new label with objectname "MacProgressDialogLine1" Â
+	with container MacProgressIndicatorDialog Â
+	with textLocation 'centerLeft' Â
+	with text "Line 1"
+tagPart MacProgressIndicatorDialog, MacProgressDialogLine1, 'line1'
+
+new label with objectname "MacProgressDialogLine2" Â
+	with container MacProgressIndicatorDialog Â
+	with textLocation 'centerLeft' Â
+	with text "Line 2"
+tagPart MacProgressIndicatorDialog, MacProgressDialogLine2, 'line2'
+
+new MacButton with objectName "MacProgressDialogStopButton" Â
+	with container MacProgressIndicatorDialog Â
+	with text "Stop" Â
+	with isDefault 
+tagPart MacProgressIndicatorDialog, MacProgressDialogStopButton, 'stopButton'
+
+on mouseUp of me (a MacProgressDialogStopButton)
+	do inherited
+	set my window's container to False
+	-- just abort the operation.
+	abortBreak()
+end mouseUp
+
+on percentDone of me (a MacProgressIndicatorDialog)
+	return percentDone of my indicator
+end percentDone
+
+on set percentDone of me (a MacProgressIndicatorDialog) Â
+   with drawSmooth: smooth (defaulting to true) Â
+   with force: ignorePrevious (defaulting to false) Â
+   to newValue
+   -- just passed the event to its indicator.
+   set percentDone of my indicator with drawSmooth smooth Â
+	with force ignorePrevious Â
+	to newValue
+end set percentDone
+
+on resized of me (a MacProgressIndicatorDialog) 
+	set {h,v} to my size
+	set my indicator's boundsRect to {12,11, h - 15, 22}
+	set my line1's left without resizing to 10
+	set my line1's top without resizing to 29
+	set my line2's left without resizing to 10
+	set my line2's top without resizing to 47
+	set my stopButton's location to {h - 50, v - 20}
+end resized
+
+resized MacProgressIndicatorDialog
+
+------------------
+-- macanimation --
+------------------
+
+-- The key to the MacAnimation object is the cellSet property. This property contains an ordered list
+-- of the renderers that the animation needs. Then we also have a clock. That's pretty much it.
+
+new rectangle with objectName "MacAnimation" Â
+   with otherParents {macWidget} Â
+   with frameSize {0, 0}
+
+addProperty MacAnimation, 'cellSet'
+
+on set cellSet of me (a MacAnimation) to newValue
+   -- This just takes care of setting the current (generally stopped) fillColor of the animation to 
+   -- the first in the series.
+
+   if newValue doesn't equal false then Â
+      set my fillColor to the first item in newValue
+   do inherited
+end set cellSet
+
+addProperty MacAnimation, 'clock'
+
+-- So we can get ticks at regular intervals when we're animating the barber pole,
+-- we need to add a realTimeClock to our object, set at the default of 30 ticks
+-- per second.
+
+new realTimeClock with objectName "MacAnimationClock" Â
+   with ticksPerSecond 30
+
+addProperty MacAnimationClock, 'owner'
+
+on tick of me (a MacAnimationClock)
+   animate my owner
+end tick
+
+on initialize of me (a MacAnimation), original, isNew, initArgs
+   -- When we build a new barber pole, we need to also create a new clock, and attach
+   -- the two together.
+
+   global MacAnimationClock
+   do inherited
+   set my clock to new MacAnimationClock
+   set my clock's owner to me
+end initialize
+
+
+on animate of me (a MacAnimation) with num: howMany (defaulting to 1)
+   -- If you call animate with no parameters, it just animates one frame (as it does 
+   -- for every tick of the clock), and when it comes to the end of the list, it just
+   -- wraps around. If you call it with the num parameter, it will animate that number of times.
+
+   if my cellSet doesn't contain my fillColor then Â
+      set my fillColor to the first item in my cellSet
+   repeat with count from 1 to howMany
+      set tempNum to the position of my fillColor in my cellSet
+      set my fillColor to item (tempNum mod (length of my cellSet) + 1) in my cellSet
+   end repeat
+end animate
+
+on startAnimation of me (a MacAnimation)
+   -- Starts the barber pole.
+
+   start my clock
+end startAnimation
+
+on stopAnimation of me (a MacAnimation)
+   -- Stops the barber pole.
+
+   stop my clock
+end stopAnimation
+
+on set rate of me (a MacAnimation) to newValue
+   -- This sets how fast the animation runs (in frames per second).
+
+   set ticksPerSecond of my clock to newValue
+end set rate
+
+-- Finally, it is very easy to define our indicators, just by declaring their size and their cellSet.
+
+new MacAnimation with objectName "MacBarberPole" Â
+   with size {188, 11} Â
+   with prototype true Â
+   with cellSet {barber1Renderer, barber2Renderer, barber3Renderer, barber4Renderer} 
+
+new MacAnimation with objectName "MacRoundIndicator" Â
+   with size {32,32} Â
+   with prototype true Â
+   with cellSet {MacRoundIndicator1Renderer, MacRoundIndicator2Renderer, Â
+                 MacRoundIndicator3Renderer, MacRoundIndicator4Renderer, Â
+                 MacRoundIndicator5Renderer, MacRoundIndicator6Renderer, Â
+                 MacRoundIndicator7Renderer, MacRoundIndicator8Renderer}
+
+#|
+	Change History (most recent last):
+	2  	 2/27/97	Hernan  	
+	3  	 2/27/97	Hernan  	
+	4  	 2/27/97	Hernan  	Removing old copyright notice.
+|# ;(do not edit past this line!!)

@@ -1,0 +1,1747 @@
+=========================================================================================
+                               Changes to Public API
+=========================================================================================
+
+In this file we describe changes to the public API as they happen. The build is noted.
+Please list later builds closest to the top of the file.
+
+=========================================================================================
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+fc13
+----
+
+step of QuickTimeRenderer now returns #undefined#
+
+(The following was in b3 but didn't make it into the release notes.)
+SK8 maintains backups of your project when it saves.
+  SK8 saves like this:
+
+    Delete                 "MyProject 1 backup" (if any)
+    Rename  "MyProject" to "MyProject 1 backup"
+    Save to "MyProject"
+
+  (Your own project's name is used in place of "MyProject", of course).
+
+  If you want more than one layer of backup, simply create a
+  file with a higher numbered backup name (it can be of any type).
+  SK8 will maintain as many layers of backup as the highest-numbered backup file.
+  So, for example, if you want four levels of backup files, create
+  "MyProject 4 backup"  The intermediate numbered files will accumulate until
+  they all exist.
+
+  SK8 saves four layers of backups like this:
+
+    Delete    "MyProject 4 backup"
+    Rename  "MyProject 3 backup" to "MyProject 4 backup"
+    Rename  "MyProject 2 backup" to "MyProject 3 backup"
+    Rename  "MyProject 1 backup" to "MyProject 2 backup"
+    Rename  "MyProject"               to "MyProject 1 backup"
+    Save to  "MyProject"
+
+
+b3c127
+------
+
+COLLECTIONS IN B3
+
+Introduction
+
+We have made some significant changes to the implementation of collections
+in SK8 B3. Despite our best efforts to fix bugs and to preserve the API,
+there remain some problems and there are a few changes (mostly in terms
+of values returned by certain operations). These notes describe points that
+users of SK8 should be aware of when using collections and selection 
+expressions.
+
+General Problems and Issues
+
+1. INSERTINTO
+   Many users think that "insertInto(x,y)" is another way of saying
+   "insert y into x", but, unfortunately, they are mistaken. The
+   form "insertInto(x, y)" is internal to the SK8 Collection Protocol,
+   and it returns a NON-SK8SCRIPT OBJECT that represents the iteration
+   states of the insertion location before and after the insertion
+   took place. It is exposed to users only in order that they can
+   create their own collection classes. SK8Script users should NEVER
+   call "insertInto(x,y)".
+
+   We know that this handler is a problem and we intend to fix it in 
+   a future release.
+
+2. PROBLEMS WITH TABLES
+   There are several problems with the implementation of Tables. As a
+   result, there are two things to watch out for: first, it is likely
+   that routine maintenance will introduce bugs that cause the following
+   kind of error:
+
+     set t1 to new Table
+     set item 'foo' of t1 to "Foobar!"
+     
+     ERROR: False is not of the expected type ListPair
+
+   The cause of this is known, and we can fix these bugs quickly. In the
+   long term, we plan to replace the design that cuases this problem.
+
+   The second Table problem is that users most likely cannot create their
+   own Table types until the redesign is completed. Even if users 
+   follow the (complex) rules for creating their own collection types,
+   user-created Tables probably won't work.
+
+3. DO NOT RELY UPON THE VALUE RETURNED BY 'SET' OPERATIONS.
+
+   Many users assume that the following should work:
+
+   set x to (set item 1 of y to "Hello")
+
+   but they are mistaken. The more common way that this problem arises
+   is that a user sets the value of some item in y by typing a
+   command into the MessageBox, and expects to see the changed 
+   y appear in the output of the MessageBox. The reason that this is
+   a problem is that at present the return value of a set operation
+   is completely arbitrary and may have nothing to do whatsoever
+   with the collection that is being set. Often the return value
+   of a 'set' operation is False; in some cases it is a NON-SK8SCRIPT
+   OBJECT that represents an iteration state.
+
+   The basic rule of thumb is: DISREGARD THE VALUE RETURNED BY A
+   'SET' COMMAND; it doesn't mean anything to the SK8 user.
+
+4. BACKWARD ITERATION IS NOT SUPPORTED
+
+   Backward iteration is what happens any time you specify an item in
+   a collection by counting backward from the end or from another
+   item in the collection. This behavior may work in some cases, but
+   IS NOT SUPPORTED IN B3. The reason is that the design of iteration
+   in the current implementation makes some rather strong assumptions
+   that iteration will occur in a particular order (forward), and 
+   therefore backward iteration simply does not work reliably in all
+   cases. We hope to remedy that situation in due time.
+
+   EXAMPLES:
+
+   the third item before the end of x [NOT SUPPORTED!]
+   the first item before the third item that is < 2 in x [NOT SUPPORTED!]
+
+5. RANGE SPECIFICATIONS ARE UNRELIABLE
+
+   Expressions of the form 
+
+      item 2 thru 5 of x
+      set item 10 thru 20 of x to True
+
+   do not behave reliably. Their exact behavior depends upon the type
+   of collection stored in x and whether the operation is a 'get' or
+   'set' command. Expressions of that form MAY behave correctly,
+   or may exhibit a fence-post error in which the items affected are
+   one short of the items specified (for example, setting items 10 thru 19
+   when items 10 thru 20 were specified). The reason for this behavior is known
+   and it should be fixed soon. In the meantime users can get reliable behavior
+   by using 'repeat' loops. 
+
+   For reference, here are some known behaviors:
+
+   VECTORS: 'get' works correctly; 'set' does not
+   STRINGS: 'get' works correctly; 'set' works correctly
+   LISTS: 'get' works correctly; 'set' does not
+   GENERAL SK8 COLLECTIONS: 'get' works correctly; 'set' works correctly
+
+6. 'IN' DOES NOT ALWAYS WORK AS ADVERTISED
+
+   The expression "item J in X" causes an error. You must use either of
+   the following expressions instead:
+
+   get item J in X
+   item J of X
+
+7. NESTED RANGES ARE NOT ALLOWED
+
+   Expressions of the form:
+
+     every item from item 2 to item 3 of every item after item 2 of stage
+
+   are examples of a form called a 'nested range'. A nested range is an 
+   expression where one selection expression is used to describe some of
+   the items in a collection, and those items are used as a source collection
+   for another selection expression. SK8 B3 does not support nested ranges. 
+   In most cases attempts use such expressions should cause
+   an error message to be displayed.
+
+8. COMBINING COERCION AND ITERATION CAN GIVE UNEXPECTED RESULTS
+   As an example, consider the expression:
+
+     every item in {1,2,3} as a string
+
+  The user who wrote this expression probably expects to see something
+  like this:
+
+     {"1","2","3"}
+
+  but instead sees something like:
+
+     {"{", "1", ",", " ", "2", ",", " ", "3", "}"}
+
+  What has happened is that, first of all, {1,2,3} is converted to a string,
+  the string "{1,2,3}". Now 'every item in' means to iterate over the characters
+  of the string and return them all (as a list of characters). To get the desired
+  result here you would need to use a 'repeat' loop.
+
+  We consider the behavior of expressions like this to be a problem, and
+  addressing it is an open design issue. Problems of this type will probably
+  be fixed in a future release by small changes to the language.
+
+9. INTEGER INDEXES FOR TABLES AND ARRAYS
+   Most SK8 collections can be thought of as Sequences; that is, they can be
+   thought of as a range of items that appear in a certain order. That order
+   corresponds to the order that the items appear in an iteration. Tables and
+   Arrays (of two or more dimensions; that is, Arrays that are not Vectors)
+   cannot really be thought of this way, however, as of B3, SKScript supports
+   expressions of the form
+
+     the first item in MyTable whose fillColor = Red
+
+   It's not clear whether this feature is desirable for several reasons.
+
+   First, a Table (or an Array) does not really have a well-defined order
+   for its items. As a result, "item 5 of Array" or "the tenth item of MyTable"
+   may not mean the same thing to different people, or different versions
+   of SK8, or even the same version of SK8 operating on the same collection
+   more than once.
+
+   Second, if we require that all collections behave consistently with 
+   expressions like the above then we may require the performance of
+   collections in general to suffer in order to support a fairly esoteric
+   (and poorly-defined) feature in certain collections.
+
+   Third, Tables present an additional problem, in that "item 1 of myTable"
+   should mean the item that is stored under the key "1", and not
+   necessarily the first item touched in an iteration. That fact makes it
+   very difficult to understand what "the first item of myTable" should
+   mean.
+
+   All in all, we may be best served by declaring that only Sequence types
+   should be accessible by indexes into the iteration order. In fact, we could
+   define Sequences as any objects that can be indexed by iteration order.
+
+10.CAN'T GET LINES FROM TEXTSTREAMS
+   There is a pernicious bug in the implementation of TextStreams that prevents
+   proper execution of expressions of the following form:
+
+     get the 5th line of myTextStream
+
+   The problem has existed for some time, but it shows up in different ways in
+   different releases. We don't know the cause. We'll fix it as soon as we can.
+   In the meantime you can still use 'word' and 'character'; only 'line'
+   is affected. If you need to read TextStreams you can therefore read them
+   a word or line at a time using repeat loops.
+
+11.RELATIVE STATES ARE BROKEN
+   A selection expression with relative state in SK8Script is an expression
+   of the following form:
+
+     the Nth item [before | after] the [selection expression]
+
+   The [selection expression] specifies an iteration state referred to as the
+   relative state; the remaining part of the overall expression uses that
+   relative state to specify an item in the source collection. An example
+   would be:
+
+     the second item that is < 2 before the first number in x
+
+   Expressions of this form ARE SUPPORTED in B3, but DO NOT WORK. This is
+   a bug that we will fix as soon as possible.
+
+12.SET ANY T IN C TO X
+   [Where T is a type, C is a collection, and X is any value.]
+   Expressions of the above form cause an error to be signalled if there
+   is no item of type T in C. You can easily work around this bug
+   by first checking to see whether there is any T in C. If the
+   expression "any T in C" returns False then there is no T in C and
+   you should not try to do the SET. If the value returned is not False
+   then it is safe to do the SET.
+
+-----------------------------------------------------------------------------
+
+b3c118
+------
+
+The pickerMenu now has a default menuselect handler which sets the text of the menu
+to the the text of the selected menu item.  This handler can be overridden to do nothing
+if the user so desires. 
+
+b3c117
+______
+
+DY:
+
+QuickTimeRenderer:
+
+* When visible of its actorOwner changes, the display wasn't updated correctly.
+  Renamed displaying to visible and made it a virtual property which is defined
+  on DynamicRenderer.  We override the setter to do what we need.
+
+* The onStage property is now virtual and read-only.
+
+
+b3c114
+______
+
+* known problem: sometimes when you press the help key to get a help balloon in the
+  messagebox or in any other ScriptEditText, the balloon will "get stuck", refusing to
+  go away. The workaround is to press COMMAND-. (command period). 
+
+b3c106
+_____
+
+DY:
+
+New properties of QuickTimeRenderer:
+
+New property: speakerButtonVisible of QuickTimeRenderer
+True by default.
+
+New property: stepButtonsVisible of QuickTimeRenderer
+True by default.
+
+usingWindowPalette of QuickTimeRenderer
+False by default.
+
+These describe attributes of the controller UI when controllerVisible is True.
+
+b3c85
+_____
+
+* A note on usage of enteringStage:
+  --------------------------------
+
+  If you define your own enteringStage handlers you must not do anything in them
+  that would force a redraw of the window that is being brought up. This is because
+  the window is not fully constituted yet. This is a bug and it will be fixed after
+  B3.
+
+  Examples of things that you should not do are: any form of calls to setBoundsRect
+  (modifing the boundsRect, location, size, h, v, etc.), changes of fillcolor, frameColor,
+  textColor, layer, etc.
+
+b3c84
+_____
+
+* Added three new windowStyles to allow windows to have no close box. These are
+  'documentNoClose', 'documentWithGrowNoClose' and 'documentWithZoomNoClose'.
+
+b3c83
+_____
+
+
+DY:
+
+New virtual property: ticks of DateTime (defaulting to 0)
+New virtual property: ticksPerSecond of DateTime (defaulting to 1)
+
+The ticks property is to represent portions of a second.
+It would be useful if ticks of Now returned a useful number,
+but for now it returns 0.
+
+There used to be a "ticks of Now" property that was not used anywhere in the system.
+It was returning the number of ticks since boot.  It didn't belong re.
+It has been transformed into a global function
+    systemTickCount
+which also is not used anywhere.
+
+There is a new object called DateTimeIndirect.
+A descendant of DateTimeIndirect gets and sets its
+secondsSince1904 property by calling supplied functions
+with suppliec arguments.
+
+New readonly properties of QuickTimeMovie:
+  creationTime
+  modificationTime
+These yield a DateTimeIndirect object.
+
+The Now object now complains if you try to set anything about it.
+
+Two new functions:
+
+raiseInsufficientInitializersError original requiredInitializers with argumentsToCheck
+
+  If argumentsToCheck is not False, then it is searched for the given requiredInitializers
+  (a list of Symbols).  If not all of them are found, or if argumentsToCheck was False.
+  then raise a GeneralProgrammaticError that complains and lists the required initializers.
+
+raiseUnsettablePropertyError property, theObject
+
+  Raise a GeneralProgrammaticError complaining of an attempt to set the given property of the
+  given object.
+
+
+b3c81
+_____
+
+DY:
+
+New property: playingEveryFrame of QuickTimeRenderer
+
+When true, every frame plays, with rate lower than requested if necessary.
+Sound tracks are disabled.
+
+
+Argument name change:  nextInterestingTime of QuickTimeRenderer
+
+takes with argument playingEveryFrame instead of everyFrame
+
+
+b3c70
+_____
+
+DY:
+
+In the discussion that follows, we will use "player" to refer to a child of QuickTimeRenderer.
+
+New property: controllerVisible of QuickTimeRenderer.
+False by default.  Self-explanatory.  Set it to True or False
+whenever you want.  When it's true, you can click on the various
+elements of the controller to start, pause, set the timeValue, etc.
+All of these mouse actions are reflected in the properties of the
+QuickTimeRenderer.  For example, when you click the play button,
+you will note that state of player is now 'playing'.
+
+New property: usingBadge of QuickTimeRenderer.
+False by default.  When this is True, controllerVisible is False, and the movie is not
+'playing', the little "badge" will be displayed.  If you click on it, controllerVisible
+goes to True, and the badge is invisible.  If you set controllerVisible back to False,
+the badge displays again (but only when the movie is not 'playing'.  Set it to True or False
+whenever you want.
+
+New property: reservingRoomForController of QuickTimeRenderer.
+False by default.  Even if controllerVisible is False, room will
+be reserved in the actor for the controller.  Example:
+  new QuickTimeRenderer with media Â
+      with reservingRoomForController Â
+      with objectName "player" Â
+      with backgroundColor Transparent
+  set rect's fillColor to player
+  set player's
+  set player's controllerVisible to True
+  set player's controllerVisible to False
+
+The default value for alignment of QuickTimeRenderer is now {.5, 0} instead of {.5, .5}.
+This is because you don't want the movie to shift
+vertically when you turn controllerVisible on and off.
+
+The default value for newStateWhenDone of QuickTimeRenderer is now 'paused' (used to be 'stopped').
+If either usingBadge of player or controllerVisible of player, then it is an
+error to set newStateWhenDone of player to 'stopped'.
+If newStateWhenDone is 'stopped', and you set either usingBadge of player or controllerVisible of player
+to True, newStateWhenDone is set to 'paused'.
+
+There is now no longer a defaultBackgroundColor property of DynamicRenderer
+(and thus of QuickTimeRenderer, which inherits from DynamicRenderer).  It used
+to be the case that when you did this:
+  set rect's fillColor to player
+the previous fillColor of rect would become the new backgroundColor of player.
+This no longer happens.  You can set the backgroundColor of player, and it will
+remain the backgroundColor of player from then on.
+
+It is now an error to attempt to set
+   matrix of player
+   scale of player
+   movieBox of player
+or to set those properties of a QuickTimeMovie while that movie's renderer
+property is not False.
+
+New property: preferredSize        of QuickTimeRenderer
+New property: preferredAspectRatio of QuickTimeRenderer
+These are like their counterparts of QuickTimeMovie, except
+they include room for the controller UI when appopriate.
+
+
+b3c62
+_____
+
+The SK8 Resources folder no longer exists. The SK8 Documentation file that was there
+can now be found in the same folder as the SK8 application.
+
+b3c52
+_____
+
+API changes:
+
+set container of actor                          after -> following
+install of menu                                 after -> following
+set menubar of Menu                             after -> following
+setf menu of menu                               after -> following
+insertrow of expressionwatcherpicker            after -> following
+
+These changes do not affect any of the installed base since use of the :after keyword
+prevented all these handlers from compiling... 
+
+b3c51
+_____
+
+openfiledialog and newfiledialog no longer have title, h, v, height, and width
+keywords.
+
+
+b3c50
+_____
+
+The SK8 and ProjectBuilder files, which used to be in the SK8 Resources folder,
+no longer exist.
+
+When building a standalone application, you now have the option of either keeping the
+project files for any open projects, or of merging their contents into the application
+file that is being built. The calling sequence for the BuildStandalone function has
+been changed to match this. It is now
+
+  BuildStandalone "filenamestring" with UIWindows with mergeProjectFiles
+
+where the filenamestring argument is a character string name of the application file to
+be created, UIWindows (default is True) specifies whether to save the SK8 project
+builder UI with the application, and mergeProjectFiles (default is True) specifies
+whether to merge the project file information into the application file.
+
+If the project files are merged into the application, then 1) Any resources that were
+imported into project files using the media browser or the Import command will be
+copied into the application file, and the media objects that refer to them will have
+their ResourceId and File properties changed to match; 2) The File property of the
+Project objects will be set to False, so that the saved application will have no
+reference to the original project files. It will still be possible to create a new
+project file from the standalone application by using Save As.
+
+If the project files are not merged into the application, then the resulting standalone
+application may require the project files to be found in order to run properly. The
+project files are only required if they contain imported media resources, or if the
+running application tries to refer to the project file in order to Import resources
+into it. In the absence of any such references, a standalone application that was saved
+without the mergeProjectFiles option that is launched without the project file around
+will run properly.
+
+Note that building a standalone application with mergeProjectFiles will not delete the
+project files, but also will not automatically save them first. It is up to the user
+to ensure that the project files were saved properly if they are to be used with a
+standard SK8, or to delete them after the application is built if they are not going
+to be used. The standalone application built with mergeProjectFiles will ignore the
+existence of the project files if the user neglects to delete or move them.
+
+b3c40
+_____
+
+* holding down the CONTROL, OPTION and COMMAND keys will get you out of any eventmode.
+  exitMode will be called and then an abort message will be sent to free you from the
+  evil forces. 
+
+b3c35
+_____
+
+* Polygon has lost 6 slots which implemented the concepts of pivot, magnification and
+  origin. Any polygons saved prior to this version will continue to work just fine. The
+  slots removed are hpivot, vpivot, hmagnify, vmagnify and the two that dealt with the
+  origin.
+
+b3c33
+_____
+
+* set points of Polygon looses the pivotUpdate argument. The pivot update should always 
+  happen, and now things behave this way.
+
+b3c26
+_____
+
+* the API of Picker has been changed to allow set selectedItems to work (it did not compile
+  in SK8Script before because it used reserved words as keyword arguments. Please refer to the
+  on line documentation for details. The properties affected are 
+
+  selectedItems and selection of Picker.
+
+  Not that this should not be a problem to users since the use of set selectedItems of Picker
+  was illegal syntax and would not compile. You could not redefine this handler either (unless
+  you changed the arg list). The most common use of this handler (to set the selectedItems to
+  a list of items already in the picker) works fine without requiring any changes to user code.                                                                                
+
+* Fixed holes and inconsistencies in the EditText API. Added pageUp/Down/home/end functionality
+  for both EditText and ScriptEditText. Also made verticalScroll and set verticalScroll be
+  consistent by always dealing with line numbers (not character positions). 
+
+  Also added a lineNumber handler. Please see the on line docs on all this. 
+
+b3c12
+_____
+
+* The following Renderers were removed from the system:  GoldOak, DarkOak, PinkMarble, Granite, 
+  GoldMarble, LargeBrickWeave, SmallBrickWeave, BrickWall, and WoodShingles.  All Projects which
+  use these renderers must cease using them before they can load.  The following Renderers
+  were added to the system: CrumpledPaper, GrayGrid, GreenSlashes, LightBoard, SmallPurpleWeave, 
+  and WhiteGrid.  
+
+* All file dialogs and project dialogs now use Macintosh dialogs.  As a result a number of the 
+  keyword parameters previously available are no longer.  In particular Height, Width, H, V, 
+  and TextFont.
+
+b2c82
+_____
+
+* All file dialogs now require that the user specify the project argument.  In the past this
+  defaulted to SK8, but this caused objects to be created outside the user's project thus
+  confusing the store.
+
+* SK8Script's "the range over" operator now works. This allows you to get a contiguous range. E.g.:
+  "the range over word 1 thru 3 of someText", "the range over every item that's even in {1,2,3,4,5}"
+
+
+b2c75
+_____
+
+* adding maskEqual and maskEmpty (two functions).
+
+* (Informational) Fred now draws straight into gWorlds.
+
+* (Informational) Adding color to Fred. 
+
+b2c70
+_____
+* Browser Components: obsoleted the SearchField object
+
+b2c67
+_____
+* handlers, localHandlers, inheritedHandlers, and removeHandlers (of Object) no longer take
+  a 'type' keyword argument (as "before" and "after" handlers are no longer supported).
+
+* SK8Script grammar: fixed !positionalFormals for the empty case; now you can define a
+  function with NO positional arguments, just keyword arguments.
+
+* SK8Script grammar: added the "I AM" alternate form for the type-check operation.
+
+
+b2c63
+_____
+
+* Updated the grammar so that !keywordFormalDescr now allows argname to be ommitted in
+  the "with foo" form -- in this case, the local variable name is taken to be the same
+  as the keyword name.
+
+* the "properties" localCreationRelations and creationRelations have been added to all
+  objects.
+
+* added the functions initializerArgument and processUnusedInitializerArguments
+  (to access the initargs passed into the initialize handler by new/copy).
+
+* added originalPropertyValue (object, propertyName [, originalObject])
+  (to get the "original" value of a property -- either from the given originalObject
+  or from the parent that the property came from).
+
+* AliasedCollection --> IndirectCollection (renaming).
+
+* the 'position' function now takes the new keyword args 'exactmatch' and 'test'
+  (to specify that an exact match is desired, or to specify what test function is used).
+
+* Introduced #Undefined# into SK8Script (reads and writes as *undefined* from lisp).
+
+* Table and its children ObjectTable and TypeTable are fully implemented.
+
+* added VirtualType (and PositiveInteger, NonnegativeInteger), plus EnumeratedType.
+
+* added "with targetObject" with-handler (for defining handlers on anonymous objects without having to
+  use the editor!).
+
+* propagateValue is now a function (not a handler of Object); new arglist is "property from: to:".
+  Also, propagateFrom has been obsoleted (its functionality is subsumed by propagateValue).
+
+* loadScripts / loadScriptFile  now provide warnings about uninitialized/unused local variables in handlers.
+
+* variables of Project --> globals of Project.
+
+* New object Condition; Error is now a child of Condition (instead of Object).
+
+* New CONDITION command in SK8Script (analogous to the ERROR command, but for non-error conditions);
+  New local condition-handler blocks (analogous to the local error-handler blocks).
+
+* New object AbortCondition (child of Condition), localProperties:
+     exitBreak        - (a boolean) whether the current break level should be exited upon aborting
+     postAbortHandler - (a function or handler name, or FALSE) if non-false, handler to call after aborting
+     handlerArgument  - if postAbortHandler is non-false, it will be called with this value as its argument
+  Generally, you raise this type of condition via one of the three functions abortEvent, abortBreak,
+  or abortError (which each take postAbortHandler and handlerArgument keyword arguments).
+
+* The object ErrorResponse --> ConditionResponse; The object AbortError --> SK8:Abort;
+  The Project property errorResponses --> conditionResponses;
+  The function currentInvokableErrorResponses --> currentInvokableConditionResponses.
+
+* The object ErrorSystemError --> ConditionSystemError;
+  its property originalError --> originalCondition.
+  
+* The global variable currentError --> currentCondition.
+
+* abortEvent, abortError and abortBreak no longer have the postAbortAction keyword arguement; instead
+  they each now have the two keyword arguments postAbortHandler and handlerArgument.
+
+
+
+b2c44
+_____
+
+* handle of Media -> mediaData of Media
+* machandle -> loadMedia
+* Introduced unloadMedia
+* data of PixelMap becomes private
+* All file handlers dealing with resources now begin with "mac". These are:
+  hasResources, resourceFileOpen, updateResourcefile, resourceTypeAvailable,
+  SK8ImportableResourceTypesAvailable, getResourceHandles, countResourcesOfType,
+  getResourceHandleInfo, getResourceHandleNames, getResourceHandleIds, 
+  totalSK8ImportableResources, getResourceHandleFromIdForDrawing,
+  getResourceHandleFromId, getResourceHandleFromName and
+  getResourceFromTypeAndIndex.
+* The following handlers all gain "thePaper" as its last argument:
+  render, render-text, render-string, renderStretched, renderTiled, 
+  renderUnstretched, install of Pen, WITH PEN, withPen, currentClipToMask,
+  clipToMask and with clippedMask.
+* The following handlers gain "thePen" as its last argument:
+  startNewMask and finishNewMask.
+
+The documentation has been updated.
+
+b2c39
+_____
+
+* clock -> abstractClock
+* SK8Clock -> Clock
+
+b2c38
+_____
+
+* Added the EventsStopForMenus global variable.
+
+=========================================================================================
+=========================================================================================
+                                 here were the d4 notes... 
+=========================================================================================
+=========================================================================================
+
+==================================================
+                   Graphic System
+==================================================
+
+¥ New attach/detach protocol!
+
+We have expanded the set of events called when actors get attached or 
+detached from containers because the old methods (attached and detached)
+did not provide enough flexibility. We decided that an actor that is about
+to change containers might want to do one or more of the following things:
+
+* refuse to be added to a container.
+* refuse to have a certain actor added to its contents.
+* initialize itself to work within a new container.
+* initialize itselt to work with a new item added to its contents.
+* prepare for being added to the stage (directly or when one of its 
+containers is added to the stage).
+
+We have a introduced a handler for each of these cases, which will be called
+by the system. The handlers are:
+
+(1) newContainerOK (actor, newContainer)
+(2) newContentOK (actor, newContent)
+
+These are the "consent" handlers. Both the new container and the new content
+have to consent to the change in containers. The system will call these two
+handlers FIRST to ensure that the change is agreable to all. 
+
+(3) prepareForNewContainer(actor, newcontainer)
+
+This one gets called next, before the actor actually is drawn so that any
+changes will be done behind the scenes. An example would be an actor that 
+likes to appear red within rectangles and green within ovals. 
+
+Note that this handler also gets called when the actor is about to be
+removed from a container. In this case, newContainer will be false.
+
+You would write something like this...
+
+on prepareForNewContainer of (me (an Actor), newContainer)
+   -- only do all this if newContainer is not false.
+   if newContainer
+      if (newContainer is an Oval) then
+         set my fillcolor to green
+      else if newContainer is a Rectangle then
+              set my fillcolor to Red
+           end if
+      end if
+   end if
+end prepareForNewContainer
+
+(4) prepareForNewContent(actor, newContent)
+
+Next, the new container gets a change to update itself. As in the previous case,
+if newContent is false, it means that an actor was removed from the new 
+container.
+
+(5) prepareForStage(actor, onStage)
+
+This is the last handler called, only when actor (or one of its containers)
+is added to the contents of the stage. The second argument is a boolean 
+indicating whether we are adding the actor to the stage (onStage = true) or
+removing it from the stage (onStage = false).
+
+                               ----------------
+
+Note that the attached and detached handlers have been obsoleted. Also, the
+attach and detach handlers are not public anymore. All changes in containment
+have to be done using the set container handler.
+
+==================================================
+                  Event System
+==================================================
+
+¥ EVENT MODES
+
+     activate -- now sent only when the event mode is first entered.
+                 In d3, it was sent when it was entered AND when another
+                 event mode dropped back into an already entered mode.
+                 You should specialize this handler if you have to
+                 initialize your event mode. (See resume and suspend.)
+     deactivate -- now sent only when the event mode is finally exited
+                   by a call to exitMode. (See resume and suspend.)
+     suspend -- new in D4. This is sent to the event mode object when
+                the event mode is suspended by another event mode.
+                In d3, you would get a deactivate event.
+     resume -- new in D4. This is sent to the event mode object when
+               the event mode is "re-entered" when it has already been
+               activated but temporarily superseded by another one.
+               Typically, you won't have to specialize this.
+     enterMode and exitMode -- THESE STILL EXIST, BUT THEY ARE NO LONGER
+                               SPECIALIZABLE. These handlers are locked.
+
+¥ New set of drag/drop events.
+
+We have expanded the number of events for dragging and droping. The set of events is now
+the following:
+
+draggedOverEnter
+draggedOverLeave
+beingDraggedOver
+
+drop
+dropped
+
+(1) draggedOverEnter(Actor, actorDragged)
+(2) draggedOverLeave(Actor, actorDragged)
+
+Whenever you call drag with draggedOverEvents, these two messages get sent to the actor
+under the actor being dragged.
+
+(3) beingDraggedOver(Actor, actorDragged)
+
+If you call drag with beingDraggedOverEvents, this message gets sent to the actor under
+the actor being dragged. It is sent continuously until the actor being dragged leaves
+the actor under it. Note that draggedOverEnter and draggedOverLeave are sent also.
+
+(4) drop(Actor, dropRecipient)
+
+When you call drag with dropEvents, the drop message is sent to the actor being dragged.
+The default handler just sends the dropped message to the drop recipient (the actor
+right under the actor being dragged).
+
+(5) dropped(Actor, actorDragged)
+
+Called to tell actor that the actorDragged is being dropped into it. It is the 
+responsability of the actor to change the container of the actorDragged if wanted.
+
+==================================================
+                  Object Library
+==================================================
+
+¥ Renderer Hierarchy Rearchitected!!!         *** IMPORTANT ***
+
+The renderer hierarchy has been rearranged in order to simplify things. The following
+is the finished hierarchy with brief explanations. What follows after that is a 
+description of each renderer and its properties.
+
+Renderer 
+   Transparent
+   Multicolor                    -- renders a list of renderers.
+   BevelRenderer                 -- renders 4 renderers in special regions.
+   SketchRenderer                -- renders a background and a list of lines.
+   Hatch                         -- various lines and grids.
+   RGBColor                      -- simple colors made of RGB.
+      ComplexRGBColor            -- RGB + backRGB + opRGB + penmodes.
+   Gradient 
+      ComplexGradient            -- gradient + penmodes + change in opRGB.
+   ImageRenderer                 -- everything for everyone.
+   
+Renderer Properties
+___________________
+
+RENDERER: Transparent
+EFFECT: does not render.
+PROPERTIES: <none>
+
+RENDERER: Multicolor
+EFFECT: renders the renderers in its colorList one at a time.
+PROPERTIES: colorList -> the list of renderers.
+
+RENDERER: BevelRenderer
+EFFECT: Designed to create a bevel effect using the frame of a rectangle.
+PROPERTIES: leftRenderer -> renderer used for the left side.
+            rightRenderer -> renderer used for the right side.
+            topRenderer -> renderer used for the top side.
+            bottomRenderer -> renderer used for the bottom side.
+
+RENDERER: SketchRenderer
+EFFECT: Given a list of points, connects them with lines. All drawing is relative
+        to the top left corner of the region given to the render method. You can
+        specify the background renderer, the lines' RGB and the pensize.
+PROPERTIES: linePoints -> a list specifying the points. Format is {h1, v1, h2, v2,...}
+            pensize -> the size of the pen. A list of two numbers: {hSize, vSize}
+            foreRenderer -> renderer used to color the pen. Should be an RGBColor.
+            backRenderer -> renderer used to color the background.
+
+RENDERER: Hatch ---> more to come...
+
+RENDERER: RGBColor
+EFFECT: Renders a region with a simple uniform color.
+PROPERTIES: foreRed
+            foreGreen
+            foreBlue
+
+RENDERER: Gradient.
+EFFECT: Renders a region with an color that smoothly goes from the startcolor to
+        the endColor.
+PROPERTIES: endblue  -> the end color is specified with these 3 properties.
+            endgreen
+            endred
+            startblue  -> the start color is specified with these 3 properties.    
+            startgreen
+            startred
+            scalefactor -> determines the number of steps to get to the endcolor
+                           from the startColor.
+            direction -> Determines in what form the color will change. Options:
+                         ':vertical' 
+                         ':horizontal'
+                         ':rect' -> the frame of the region's rectangle is colored
+                                    with the startColor. The rectangle will then get
+                                    smaller and smaller towards the center of the
+                                    region that will be colored with the endcolor.
+                         ':oval' -> like the one above but using an oval.
+                         ':shape' -> also like above but using the shape of the
+                                     region to be drawn.
+
+The Image Renderer
+__________________
+
+The imageRenderer is in charge of rendering anything that has media associated to
+it. The imageRenderer can thus render PICTs, cicns, ppats, PATs and pixelMaps. The
+idea is that any render that renders "bits" can do the following things with them:
+
+(1) stretch them to fill a region (what the old PixmapRenderer used to do).
+(2) tile them to fill a region (what the old QDPatternRenderer used to do).
+(3) do not tile or stretch: just show at its natural size within the region.
+
+The imageRenderer lets you do all this regardless of the type of media you are
+using with it: all you have to do is set its media!
+
+RENDERER: imageRenderer
+EFFECT: renders media. Can stretch, tile or leave unstretched.
+PROPERTIES: backGroundRenderer -> what renderer to use to render the background
+                                  (behind the media). If false no rendering of the
+                                  background is done.
+            hOffset -> if the media is being rendered ':unstretched' you can use
+                       this property to specify the number of pixels away from the
+                       left side of the region where you want your image to appear.
+                       The default is 0.
+            vOffset -> if the media is being rendered ':unstretched' you can use
+                       this property to specify the number of pixels away from the
+                       top side of the region where you want your image to appear.
+                       The default is 0.
+            media -> the renderer's media. Should be a child of the following media
+                     objects: QDPicture, iconRSRC, BWPattern, ColorPattern or 
+                     PixelMap.
+            renderStyle -> determines what the renderer does with the media. Options
+                           are
+                           ':stretched' -> bits are stretched to fill the region.
+                           ':tiled' -> bits are tiled to fill the region.
+                           ':unstretched' -> bits are renderer with their natural
+                                             size using the hOffset and vOffset 
+                                             properties to determine their position.
+
+Using the ImageRenderer
+_______________________
+
+Let us illustrate the use of the new renderer with a little example. Suppose you
+are writing a chess program. Your first task is to draw the board. Let board be
+the rectangle you have created for this purpose.
+
+The board can be rendered easily with a simple black and white pattern if you think
+of it as a blown up pattern. So we will find the appropriate pattern and stretch it
+to fill our board. First we make the renderer.
+
+      new imageRenderer with objectname "boardRenderer"
+
+Now we associate it to the right media. GrayPattern will do fine.
+
+      set boardRenderer's media to GrayPattern
+
+And we set the fillcolor of the board to our new renderer.
+
+      set board's fillcolor to the boardRenderer
+
+You will notice that the board just looks like a gray matt all over which is not
+what we wanted. The problem is that the renderStyle of an ImageRender that renders
+a pattern defaults to ':tiled' which makes sense for patterns. We want our pattern
+to be stretched. Therefore we just
+
+      set boardRenderer's renderStyle to ':stretched'
+
+And we tell the board to redraw itself to show the change. (Note that the change
+does not happen autotically because a renderer has no way of knowing all the actors
+it is rendering).
+
+     forceRedraw board
+
+And that's it. If are in an exploratory mood you can try setting the renderStyle
+to ':unstretched' and see the pattern in all its original glory. (Doing this, by
+the way is a simple way of finding out how big a pattern is).
+
+You will like this
+__________________
+
+The imageRenderer can be used to turn an actor into a renderer: we can take a
+snapshot of an actor and render any region with it!
+
+Example: rendering you own actors with the messagebox!
+
+new imageRenderer with objectName "msb" -- make the renderer
+CapturePicture msb, messagebox          -- take a snapShot of the messagebox and
+                                        -- stores it in the renderer
+
+set myActor's fillcolor to msb          -- render an actor's fill with msb.
+
+The capturePicture handler is used to make the snapshot. It creates a new media
+of type pixelMap to store the data in. You should be aware of the fact that this
+process can use a lot of memory to save the images. The next section explains the
+most efficient way of using this feature.
+
+If you use capturePicture: READ THIS!
+_____________________________________
+
+CapturePicture, the handler that takes a snapshot of an actor and places it in an
+ImageRenderer for rendering has been improved. You can now specify the size you want
+that cached pixmap to have. This is very important since the size of the cached
+pixmap determines the amount of memory your ImageRenderer will use.
+
+The form of CapturePicture is:
+
+CapturePicture ImageRenderer, otherActor
+               with backgroundColor (a Renderer)
+               with size (a list of {h,v} form)
+
+Example:
+
+Consider an actor called "act" whose size is 400 by 600 pixels. You want to capture 
+its picture to render a rectangle whose size is 50 x 50. Assume you have snp, an 
+imageRenderer you created. Then the simplest thing is to just call CapturePicture 
+as follows:
+
+CapturePicture snp, act
+
+Note that no size is provided. The system assumes you want to cache act's image in
+all its glory and thus allocates a pixmap of act's size. The memory required for it
+is therefore
+
+            400 x 600 x depth/8       
+
+Assuming 256 colors (8 bit color), we get 240000 bytes = 240K
+
+This is a clear waste if we are only going to be using our renderer to render the
+small (50 x 50) rectangle. We should instead do the following:
+
+CapturePicture snp, act with size {50,50}
+
+This will allocate a pixmap of the right size and the memory usage will be
+
+            50 x 50 x 1 = 2500 = 2.5K !!!
+
+Need we say more?
+
+¥ Menus Reimplemented.
+
+The menu actor no longer has contents! The menuShade, menuname and menuArrow have been
+removed. The menu gets all the required functionality by using its very own draw function
+(users will be able to write their own draw functions when the imaging part of the
+system is done). 
+
+All the menu features you have grown accustomed to will still work. A number of new
+feature have been added:
+
+(1) When the menu's menuType is :popUp and the menu has no text, it just leaves the 
+arrow behind. The menu will then pop up right aligned to the bottom right corner of
+its actor.
+
+(2) menuSize
+
+The menuSize handler returns the size of the menu when it is poped up. Knowing this
+in advance is useful to pop up the menu in the right place.
+
+¥ New Collections.
+
+You can now use path expressions to alter the items of a picker, the menus of a
+menubar and the menuItems of a menu.
+
+¥ The IconPicker.
+
+A simple picker that draws an icon to the left of the text. Each item may have a 
+different icon. The only restriction is that all the icons will be rendered with
+the same size. This size is specified using the iconSize property of the iconPicker.
+
+get the iconSize of <IconPicker>
+set the iconSize of <iconPicker> to {h,v}
+
+The default iconSize is {16,16}
+
+We also need a way to specify the icon for each item. The createIcondisplayitem is
+used. If should return the renderer to use to render the icon. If nil is returned
+(the default) no icon icon is renderer.
+
+Here is the default handler:
+
+on createIconDisplayItem of (me (an IconPicker), theItem, theString, thePosition)
+   return false
+end createIconDisplayItem
+
+¥ File Utilities.
+
+The following handlers have been added to file objects to deal with their resource
+forks.
+
+-> macFileType
+
+get the macFileType of <File>
+
+Returns the mac file type of the file. Returns ':directory' if the file is a folder.
+
+-> hasResources
+
+hasResources <File>
+
+Returns whether the file has a resource fork.
+
+-> resourceTypesAvailable
+
+resourceTypesAvailable <File>
+
+Returns a list of strings indicating all the resource types present in the file's 
+resource fork.
+
+-> sk8ImportableResourceTypesAvailable
+
+sk8ImportableResourceTypesAvailable <File>
+
+Returns a list of strings indicating all the resource types present in the file's 
+resource fork THAT CAN BE IMPORTED into SK8. To determine what can be imported we
+run through the children of translator checking their externalObject property. (See
+discussion of translators below).
+
+-> getResourceHandles
+
+getResourceHandles <File>, <Restype>
+
+Returns the handles of all the resources of type <Restype> in the file. The restype
+should be a string (eg. "PICT" or "cicn").
+
+-> getResourceHandleInfo
+
+getResourceHandleInfo <File>, <Restype>
+
+Returns two lists: the first one has the names of all the resources of type <Restype>
+in file. The second one has all the ids of those resources.
+
+-> getResourceHandleNames
+
+getResourceHandleNames <File>, <Restype>
+
+Returns the names of all the resources of type <Restype> in <File>.
+
+-> getResourceHandleIds
+
+getResourceHandleIds <File>, <Restype>
+
+Returns the ids of all the resources of type <Restype> in <File>.
+
+-> totalSK8ImportableResources
+
+totalSK8ImportableResources <File>
+
+Returns the total number of resources in the file that SK8 can import.
+
+-> getResourceHandleFromIdForDrawing
+
+getResourceHandleFromIdForDrawing <File>, <Restype>, <Id>
+
+Returns the a handle that can safely be used for drawing. Presumably the handle
+returned will be placed in the handle property of a descendant of media. 
+
+-> getResourceHandleFromId
+
+getResourceHandleFromId <File>, <Restype>, <id>
+
+Returns a handle to the resource of type <Restype> and id <id> in the file.
+
+-> getResourceHandleFromName
+
+getResourceHandleFromName <File>, <Restype>, <name>
+
+Returns a handle to the resource of type <Restype> and name <name> in the file.
+
+¥ The fileChooser.
+
+This is an object to choose by navigating the Mac's file hierarchy. The 
+fileChooser is a rectangle with two things in it: a pop up menu and a textList
+that uses an icon picker as its picker. The pop up menu shows the folders
+that contain the currentDirectory all the way to the Desktop. The picker shows 
+all the files in the currentDirectory.
+
+Properties: 
+___________
+
+(1) currentDirectory
+
+get the currentDirectory of <FileChooser>
+set the currentDirectory of <FileChooser> to <File>
+
+This property determines what files are shown in the filechooser. Its value
+should be a file or false.
+
+(2) outputFile
+
+get the outputFile of <FileChooser>
+set the outputFile of <FileChooser> to <File>
+
+This property is set by the fileChooser when a file has been selected. We
+consider a file to be selected either when it has been doubleclicked on or
+when it is selected and the return key is pressed.
+
+Setting the property does not do anything. It is available to be used as an
+input to a port.
+
+Icons:
+______
+
+The following icons have been created to be used in the file chooser. Since
+they are in SK8, they can all be used by your projects.
+
+DocumentRenderer
+FolderRenderer
+FloppyRenderer
+OpenFolderRenderer
+ApplicationRenderer
+HardDiskRenderer
+GrayFolderRenderer
+TrashRenderer
+DesktopRenderer
+FileServerRenderer
+
+¥ Translators
+
+Translators are objects that know how to turn SK8 objects into forms that
+can be used by the outside world (the Mac OS) and vice versa. By adding 
+translators you can increase the number of SK8 objects that can be exported
+to other apps in your Mac and at the same time the number of objects that
+can be brought into SK8.
+
+Properties:
+__________
+
+internalObject -> a SK8 object.
+externalObject -> a list of resource types.
+
+Handlers:
+________
+
+import translator, externalThing 
+       with inProject <project>
+       with sourceFile <File> | false
+
+This handler turns externalThing (usually a handle to a resource) into the
+internalObject of the translator. This involves the creation of a SK8 object.
+The object will be created in the project provided in inProject (or in the
+currentProject if nothing is specified). 
+
+If sourceFile is false, the handle is copied to the project of the new object. 
+Otherwise sourceFile should be the file the handle was obtained from. The handle
+will not be copied: the new object will set its File to the sourceFile and will
+hence look for the handle in that file. Notice that once you do this your project
+file will not contain all the resources you use.
+
+export translator, theObject
+
+This handler turns theObject (a SK8 object that has to decend from the translator's
+internalObject) into the right externalThing (usually a handle). The handle is
+returned.
+
+Example:
+_______
+
+It is a convention to name translators with the following three parts: the internal
+object, "To" and the external object. An example is the translator that translates
+between sound objects and "snd " handles. This is called
+
+SoundToSnd
+
+Its internalObject is Sound and its externalObject is {"snd "}. 
+
+Translators Provided:
+____________________
+
+-> means export
+<- means import
+
+ActorToText -> Given an actor returns a string (its text). 
+            <- Given a string, it returns a rectangle whose text is the string.
+
+ImageRendererToImageRSRC -> given an ImageRenderer it returns the handle of its media.
+                         <- given a handle it creates a media object for it and an
+                            imageRenderer. Sets the media of the imageRenderer to the
+                            media object and returns the renderer.
+
+NOTE: the import handler of this translator is a special case because given a handle
+      we cannot tell what sort of media to create for it. Thus, this handler takes
+      an exta argument, the restype, what specifies this.
+
+ActorToPICT -> given an actor returns a PICT handle (the PICT is a snapshot of the actor).
+            <- given a PICT handle, it makes an imageRenderer and a QDPicture object. 
+               Then it makes a rectangle of the size of the PICT and sets its fillcolor to 
+               the new renderer. The rectangle is returned.
+
+SoundToSnd -> given a sound it returns an "snd " handle.
+           <- given an "snd " resource it returns a sound object that will play it.
+
+TextToText <-> string into a string.
+
+Instead of making a renderer, we might just want to create the media objects. The
+following translators do this.
+
+iconRSRCTocicn -> given and iconRSRC it returns a "cicn" handle.
+               <- given a "cicn" handle it makes a cicnRSRC for it.
+
+QDPictureTopict -> given a QDPicture, returns a "PICT" handle.
+                <- given a "PICT" handle this translator makes a QDPicture for it.
+                   The new QDPicture is returned.
+
+SoundRSRCTosnd -> given a sound object, it returns its "snd " resource.
+               <- given an "snd " handle it returns a soundRSRC object for it.
+
+ColorPatternToppat -> given a ColorPattern object it returns its "ppat" resource.
+                   <- given a "ppat" resource it makes and returns a ColorPattern object
+                      for it.
+
+BwPatternToPAT -> given a BWPattern object it returns its "PAT " resource.
+               <- given a "PAT " resource it makes and returns a BWPattern object.
+
+cursorRSRCTocurs -> given a cursorRSRC object, it returns its "curs" resource.
+                 <- given a "curs" resource it creates and returns a cursorRSRC object.
+
+¥ The Sk8Clipboard.
+
+The SK8Clipboard is the data structure used by the system for all 
+cut/paste style operations. The clipboard can hold multiple objects
+and can be used within SK8 and to exchange data between SK8 and the
+outside world. (A detailed account of the clipboard mechanism can
+be found in a document titled the Clipboard API). 
+
+In this section we present the SK8Clipboard and its API. Notice that
+that this will only be useful the people trying to implement cut and
+paste behaviour for their objects.
+
+The API:
+_______
+
+* clearClipboard 
+
+clearClipboard Clipboard
+
+Disposes everything in the clipboard.
+
+* addToClipboard
+
+addToClipboard thing, Clipboard
+               with copy           -> defaults to true
+               with overwrite      -> defaults to true
+
+Adds thing to the clipboard. If copy is true a copy of thing is made
+and then added. If overwrite is true, the clipboard is cleared before
+thing is added to it.
+
+Note that if thing is an actor and copy is false, the actor will be
+removed from its container before being added to the clipboard.
+
+* objectsInClipboard
+
+objectsInClipboard Clipboard
+
+Returns everything you can get from the clipboard. Should be used in
+conjunction with getFromClipboard to get stuff out of it.
+
+You should note that the objectsInClipboard are the objects that you
+can potentially get from the clipboard (the objects might not be there
+untill you ask for them and getFromClipboard creates them).
+
+* getFromClipboard
+
+getFromClipboard clipboard, thing 
+                 with copy         -> defaults to true
+                 with removal      -> defaults to false
+                 with everyone     -> defaults to false
+                 with inProject    -> defaults to false
+
+This handler is used to get things out of the Clipboard. The second
+argument (thing) should be a SK8 object. The result of calling this
+handler will be a descendant of thing.
+
+If everyone is true, this handler will return everything in the 
+clipboard that inherits from thing. Otherwise it will return the
+first thing it finds that inherits from thing.
+
+If copy is true, the handler returns copies of the items found in
+the clipboard. Otherwise, the actual items in the clipboard are
+returned.
+
+If removal is true, objects found in the clipboard are removed from
+it before the handler returns.
+
+The inProject argument determines the project in which objects are
+created. If this argument is not supplied, the current project will
+be used.
+
+==================================================
+                  User Interface
+==================================================
+
+¥ The Media Browser.
+
+A browser to let you import media into SK8 easily. Importing media is a 3 step
+process:
+
+(1) find the media file
+(2) select from it the media you want to import
+(3) import it.
+
+The MediaBrowser has 3 panels (one for each of these steps). 
+
+Finding the Media File
+______________________
+
+On the left side of the MediaBrowser you will find the fileChooser which lets 
+you select the file where the media is. You can navigate the file hierarchy with it. 
+
+To select a file you can either doubleclick on it or press the Return key. 
+If the file has no media that can be imported by SK8 a message dialog is poped up to 
+let you know.
+
+If the file has you will notice that the picker to the right of the file chooser
+will update with new data.
+
+Selecting the Media to Copy
+___________________________
+
+The second panel of the mediaBrowser lets you sample your media. On the left we find
+a resourceList. On the right we find a resourceSampler. After a file is selected, the
+resourceList will show all the resource types in the file that SK8 can import. The
+resource type will be preceded by and arrow. You can click on the arrow to see all 
+the resources available. (Clicking on the arrow again will hide all the resources from
+view.)
+
+Once a list of actual resources is showing, you can click on one to show it in the
+sampler. Different resources show themselves differently. Picts, icons and patterns
+will be rendered in the resourceSampler area. The default is to render them into
+the whole rectangle. If you want to see the media in their original size, just click
+on the checkbox titled "Show Original Size". Sound resources will be played when
+clicked on and cursor resources will become the currentCursor of the stage when 
+clicked on.
+
+Importing the Media
+___________________
+
+To import the media you need to specify the following:
+
+(1) What to import the media as.
+
+When a resource (or a list of resources) is selected and you move to the last
+panel in the mediaBrowser the first popup menu shows what sk8 objects can be
+made using the media. Select the type you want to make.
+
+(2) What project to put the new objects in.
+
+Next you have to select the project to make the new objects in. The second menu
+is provided for this purpose. If no projects are available (only the SK8 and the
+ProjectBuilder projects are present) the MediaBrowser will not let you make 
+anything.
+
+(3) Whether the media will be moved to your project file or will be used from
+    its present file.
+
+By default the media will be copied to your project file. You can keep the
+media in its original file just by unchecking the checkbox titled "Copy Media To
+Project File". 
+
+Note that if the media is not copied you have to keep its file where in a place
+where SK8 can find it. At the time of creation, SK8 makes a new file object that 
+points to the file where the media is. If you change the location of this file, 
+SK8 will not be able to find it in the future.
+
+(4) How to name the new objects you create.
+
+After the steps above have been completed you can click on the "Do it!" button
+to choose how to name the objects you are making. A dialog comes up for this
+purpose.
+
+The top of the dialog shows you the number and the type of objects that SK8 
+will create. If any of this information is wrong you should click on the cancel
+button to cancel the whole object creation operation.
+
+There are three options for naming the objects to be created.
+
+* provide a name. If you select this option you are expected to type the
+  name in the field provided. Note that if you are creating multiple objects
+  the name you provide will be used to start the name of the objects. For example
+  if you are making 5 objects which you want to call "cow", their names will be
+  "cow1", "cow2", "cow3", "cow4" and "cow5".
+
+* Use the resource names. If you select this option, the objects will be named
+  using the names of the resources. If a resource has no name, the object will
+  not be named.
+
+* Do not name. Just creates anonymous objects.
+
+After selecting the right option, just click on the "Create" button. After the
+objects are created a dialog appear to let you know. You can then close the
+MediaBrowser or just start the whole process again.
+
+==================================================
+               SK8Script Language
+==================================================
+
+  QUALIFIED IDENTIFIER READING & PRINTING --
+     SK8Script now accepts qualification of the form "(in project <projName>)"
+     after identifiers (e.g. handler names, property names, variables names)
+     and quoted symbol literals.  PrintObject, likewise, will print such
+     qualification whenever necessary.  E.g.:
+                        DrawPalette (in project UI)
+                       'bobo' (in project Junk)
+
+  WAIT COMMAND --
+     Now takes the optional "without events" keyword argument.  The syntax is
+        WAIT [WITHOUT EVENTS] (WHILE | UNTIL) <expression>
+     for the condition-based form of the command, and
+        WAIT [FOR] <factor> <timeUnit> [WITHOUT EVENTS]
+     for the time-based form.  The default is to wait WITH events (i.e. mouse,
+     key, idle events, etc. will be processed normally during the wait).
+
+=========================================================================================
+=========================================================================================
+                                 here were the d3 notes... 
+=========================================================================================
+=========================================================================================
+
+SK8 1.0d3 RELEASE NOTES
+-----------------------
+
+
+User Interface
+--------------
+
+SK8Script Language
+------------------
+
+SK8Script Debugging
+-------------------
+
+Browsers and Editors
+--------------------
+
+¥ The treeBrowser: a browser showing objects in a tree.
+
+Object Library
+--------------
+
+¥ Menus, menuItems and menubars reimplemented!
+
+Look for a brand new chapter on this on the new documentation. Notable changes are:
+
+(1) menus and menubar are now children of rectangle.
+(2) menus and menubar can act as Mac menu or actors, depending on the setting.
+(3) contents NO LONGER returns the menus of a menubar and the menuitems of a menu.
+    Use the menus and menuitems handlers instead.
+(4) Menus cannot be reused! When you copy a menu you get a copy of all its menuItems.
+(5) Menus now have a number property to layer them in menubars. Same for menuitems.
+
+¥ contents property returns the right thing.
+
+The contents of an actor used to be the contents in back to front order.
+This has been corrected. Item 1 in the contents of an actor is now the
+frontmost actor in it.
+
+¥ growFrom property of label is removed.
+
+The growFrom property of labels used to control how the label resized
+itself when its text changed. In this new version the textLocation 
+property of the label serves the same purpose.
+
+Compatibility Note: if a project saved before d3 does not load because
+the growFrom property of labels is missing, do the following:
+
+1. launch sk8
+2. type into the messagebox "addProperty label, 'growFrom'"
+3. load your project
+4. type into the messagebox "removeProperty label, 'growFrom'"
+5. save your project
+6. close your project
+
+¥ New property of editText.
+
+Edittext has a new property called affixedScrollers. Scrollers in the 
+affixedScrollers of an editText are physically stuck to the editText.
+This means they are resized and moved together with the editText.
+
+Setting the partnerScroller of an editText now does this. If you do not
+want the scroller you are partnering to the editText to change position
+and size to affix to the editText, you can prevent this from happening
+by partnering without affixing. Consider this example:
+
+set the partnerScroller of myEditText 
+                  with orientation ':vertical'
+                  without affixing
+    to myScroller
+
+This will make the scroller control scrolling in the editText from the
+position and size it is in now. If, on the other hand, you omitted the
+affixing argument, the scroller would be moved to be next to the editText
+on its right side if the orientation is vertical and on the bottom side
+if the orientation is horizontal.
+
+The astute user will notice that the textField object is no longer a 
+rectangle containing an edittext and a scroller, but an editText with an
+affixed scroller. 
+
+¥ New picker. Can set color and styles of arbitrary items.
+
+The picker has a new child: the styledPicker. A styled picker is a picker
+that lets you set the color, font, fontSize and textStyle of any 
+arbitrary item. Recall that the picker stores a list of items and a
+list of strings representing these items. The styledPicker has a new
+property called styles that specifies the style of each item. There
+are 2 ways of doing this:
+
+(1) Compute all styles in advance.
+
+You would do this when it is too expensive to compute the styles on the
+fly. In this case, you have to redefine the set items handler of the 
+picker to construct a list of styles set the styles property (but make
+sure to call the next handler before you do it!).
+
+For each item in the picker there should be a corresponding item in the
+styles list. Each style list item should have the following format:
+
+{font, fontsize, fontstyle, color}
+
+font is a string naming a font. eg. "Monaco"
+fontSize is an integer.
+fontStyle is a list of styles. eg. {':bold', ':underline'}
+color is a descendant of RGBcolor. eg. red
+
+(2) Compute the styles when you need to draw the items.
+
+If the styles property of the picker is false, the picker assumes you
+want to compute the styles on the fly. 
+
+Each time the picker is about to draw an item it calls the handler
+called createTextItemStyle. The arguments to this handler are:
+
+createTextItemStyle styledPicker, item, theString, position
+
+styledPicker is the picker where drawing is about to happen.
+item is the item about to be drawn. eg. scroller
+theString is the string representation of the item. eg. "Scroller"
+position is the position of the item in the items of the picker.
+
+This handler should return for values: the font, the fontSize, the
+fontStyle and the color. If for any of these you want to use the default
+values, return false. An example of this handler would be:
+
+on createTextItemStyle (me (a styledPicker), item, theString, position)
+   -- 
+   -- let's make all items at odd numbered positions look different!
+   -- 
+   if position is odd then
+      return {"Monaco", false, {':bold', ':condense'}, red}
+   else
+      return {false, false, false, false}
+   end if
+end createTextItemStyle
+
+¥ Polygons can now be attached on the stage! (I eagerly await all
+  the bugs that will certainly result from this...)
+
+¥ New window style! The new style is :movableDialog. It is very
+  pretty. Try it!
+
+¥ The treeViewer: an actor that draws trees. A chapter on the reference manual
+  will materialize soon.
+
+¥ the default radioButton now looks like a Mac radio button (much nicer than before).
+  Notice how it properly autohilites. It has a new property, the checkcolor which
+  controls the color of the check (defaults to black).
+
+Event System
+------------
+
+Graphics System
+---------------
+
+#|
+	Change History (most recent last):
+	1	5/26/93	kleiman	All changes that affect users MUST be entered 
+				into this text file!
+	2	5/26/93	Hernan	Core Objects changes reported.
+	3	9/28/93	kleiman	D4 Release Notes started
+	4	9/28/93	chip	note on SK8Script's identifier qualification
+	5	9/28/93	chip	note about SK8Script WAIT command
+	6	10/8/93	hernan	Started adding changes to 2d stuff.
+	7	10/8/93	hernan	Added more changes to 2d.
+	8	10/13/93	hernan	Adding notes for the new renderer hierarchy.
+	9	11/10/93	hernan	Adding release notes for d4.
+	10	11/12/93	hernan	Adding clipboard stuff.
+	11 	 9/28/94	Hernan  	Adding b2 stuff.
+	12 	10/ 3/94	Hernan  	
+	13 	10/ 5/94	Hernan  	Fixing typos.
+	14 	10/20/94	chip    	added a bunch of release notes
+	15 	10/24/94	chip    	more stuff
+	16 	10/26/94	chip    	
+	17 	11/ 4/94	rod     	
+	18 	11/ 5/94	Hernan  	Adding maskEqual and maskEmpty.
+	19 	11/14/94	rod     	
+	20 	11/16/94	chip    	
+	21 	12/16/94	rod     	
+	22 	12/16/94	rod     	
+	23 	 1/25/95	Hernan  	Adding changes to API for b3c26
+	24 	 1/30/95	Hernan  	
+	25 	 2/ 2/95	Hernan  	Changes for b3c35.
+	26 	 2/ 8/95	Hernan  	Changes to b3c40.
+	27 	 2/17/95	sidney  	changes to BuildStandalone and use of project files in b3c50
+	28 	 2/17/95	Hernan  	Adding changes for b3c52.
+	29 	 2/17/95	rod     	
+	30 	 2/17/95	Hernan  	Adding changes for b3c52.
+	31 	 2/23/95	sidney  	
+	32 	 3/ 3/95	dy      	b3c70
+	33 	 3/10/95	dy      	QT stuff for b3c81
+	34 	 3/13/95	dy      	c83
+	35 	 3/14/95	Hernan  	Adding new windowStyles that do not have a close
+							box.
+	36 	 3/15/95	Hernan  	Adding note about enteringStage.
+	37 	 3/29/95	dy      	106 dy
+	38 	 4/ 5/95	Hernan  	Adding note about help balloons being stuck.
+	39 	 4/ 7/95	dy      	117 QT bug fixes
+	40 	 4/17/95	rod     	
+	41 	 4/24/95	me      	Added draft release notes for collection changes
+	42 	 4/24/95	me      	Worked on additional collections-related release notes
+	43 	 5/ 1/95	dy      	
+	44 	 5/ 1/95	dy      	
+	1  	 4/ 3/96	Hernan  	
+|# ;(do not edit past this line!!)

@@ -1,0 +1,46 @@
+#|
+
+This is the file ":SK8:Recompile Required Timestamp".
+
+¥ A fasl is recompiled if:
+   ¥ the fasl file modify time is older than the modify time of this file
+   or
+   ¥ all of the following are true:
+     ¥ this file has a version number (revID field of 'ckid' resource), and
+     ¥ the fasl has a master recompile version number stamped in it from a previous compile, and
+     ¥ the former is < the latter.
+   or
+   other more obvious reasons, like the fasl doesn't exist.
+¥ If you want to force a "recompile everything"
+   ¥Êonly on your machine:
+       Check the checkbox.  (When you click OK, this file is given a modify time of NOW.)
+   ¥ on your machine and for everyone after their next "Update All":
+       Check this file out/in.
+¥ÊIf a "recompile everything" build dies, and you start again, the new build will
+  continue the "recompile everything" from where it left off.  Checking
+  the checkbox again will make the recompile start over from scratch.
+¥ÊWhen you get a new version of this file by doing a SourceServer "Update", it
+  will cause a "recompile everything" the next time you build.
+¥ÊIf you want to see the reason for each recompile, set *verbose-compile-reason* to T.
+
+The same tests are also used for deciding when to rebuild the SK8 and ProjectBuilder project files
+
+|#
+
+#|
+	Change History (most recent last):
+	1  	11/15/94	dy      	
+	2  	11/15/94	dy      	add documentation
+	3  	11/16/94	dy      	
+	4  	11/16/94	dy      	testing
+	5  	11/16/94	dy      	testing
+	6  	11/16/94	dy      	
+	7  	11/16/94	dy      	document the new stamping of master version in each fasl file
+	8  	11/16/94	dy      	improve the doc
+	9  	 1/29/95	sidney  	rebuilding of sk8 and projectbuilder files are now also controlled by timestamps and this file
+							(this checkin is really to force a recompile of changed let+ macro)
+	10 	 3/ 1/95	dy      	some macros were not working correctly.  While I was at it, I removed the information that was only of interest while we were transitioning to using this file.
+	11 	 4/24/95	dy      	Timezone bug fix in Build Part 1 requires recompile anyway, so let's make it official.
+	2  	 8/17/95	sidney  	Changed build to catch locally bound specials that are SK8 objects, and had to change some macros
+	1  	 4/ 3/96	Hernan  	
+|# ;(do not edit past this line!!)

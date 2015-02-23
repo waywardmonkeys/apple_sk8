@@ -1,0 +1,1724 @@
+<Page 
+ <Unique 352>
+ <PageType LeftMasterPage >
+ <PageTag `Left'>
+ <PageSize  612.0 pt 792.0 pt>
+ <PageOrientation Portrait >
+ <PageAngle  0.0>
+ <TextRect 
+  <ID 1>
+  <Unique 353>
+  <Pen 15>
+  <Fill 7>
+  <PenWidth  1.0 pt>
+  <Separation 0>
+  <ObColor `Black'>
+  <DashedPattern 
+   <DashedStyle Solid >
+  > # end of DashedPattern
+  <Overprint No >
+  <ShapeRect  72.0 pt 36.0 pt 468.0 pt 45.0 pt>
+  <BRect  72.0 pt 36.0 pt 468.0 pt 45.0 pt>
+  <TRNext 0>
+ > # end of TextRect
+ <TextRect 
+  <ID 2>
+  <Unique 354>
+  <Overprint No >
+  <ShapeRect  72.0 pt 729.0 pt 468.0 pt 29.6777 pt>
+  <BRect  72.0 pt 729.0 pt 468.0 pt 29.6777 pt>
+  <TRNext 0>
+ > # end of TextRect
+ <TextRect 
+  <ID 3>
+  <Unique 355>
+  <Overprint No >
+  <ShapeRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <BRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <TRNext 0>
+ > # end of TextRect
+> # end of Page
+<Page 
+ <Unique 10348>
+ <PageType RightMasterPage >
+ <PageTag `Right'>
+ <PageSize  612.0 pt 792.0 pt>
+ <PageOrientation Portrait >
+ <PageAngle  0.0>
+ <TextRect 
+  <ID 4>
+  <Unique 10352>
+  <Pen 15>
+  <Fill 7>
+  <PenWidth  1.0 pt>
+  <Separation 0>
+  <ObColor `Black'>
+  <DashedPattern 
+   <DashedStyle Solid >
+  > # end of DashedPattern
+  <Overprint No >
+  <ShapeRect  72.0 pt 36.0 pt 468.0 pt 45.0 pt>
+  <BRect  72.0 pt 36.0 pt 468.0 pt 45.0 pt>
+  <TRNext 0>
+ > # end of TextRect
+ <TextRect 
+  <ID 5>
+  <Unique 10353>
+  <Overprint No >
+  <ShapeRect  72.0 pt 729.0 pt 468.0 pt 29.6777 pt>
+  <BRect  72.0 pt 729.0 pt 468.0 pt 29.6777 pt>
+  <TRNext 0>
+ > # end of TextRect
+ <TextRect 
+  <ID 6>
+  <Unique 10354>
+  <Overprint No >
+  <ShapeRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <BRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <TRNext 0>
+ > # end of TextRect
+> # end of Page
+<Page 
+ <Unique 10355>
+ <PageType ReferencePage >
+ <PageTag `Reference'>
+ <PageSize  612.0 pt 792.0 pt>
+ <PageOrientation Portrait >
+ <PageAngle  0.0>
+ <TextLine 
+  <Unique 172>
+  <Separation 0>
+  <ObColor `Black'>
+  <DashedPattern 
+   <DashedStyle Solid >
+  > # end of DashedPattern
+  <Overprint No >
+  <TLOrigin  70.0 pt 14.976 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FVar `Regular'>
+   <FWeight `Bold'>
+   <FAngle `Regular'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FUnderlining FNoUnderlining >
+   <FUnderline No >
+   <FDoubleUnderline No >
+   <FNumericUnderline No >
+   <FOverline No >
+   <FStrike No >
+   <FChangeBar No >
+   <FOutline No >
+   <FShadow No >
+   <FPairKern No >
+   <FCase FAsTyped >
+   <FPosition FNormal >
+   <FSupScript No >
+   <FSubScript No >
+   <FDX  0.0 pt>
+   <FDY  0.0 pt>
+   <FDW  0.0 pt>
+   <FSeparation 0>
+   <FColor `Black'>
+  > # end of Font
+  <String `Footnote'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 173>
+  <Overprint No >
+  <TLOrigin  72.0 pt 77.976 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Single Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 174>
+  <Separation 0>
+  <ObColor `Black'>
+  <Overprint No >
+  <TLOrigin  71.0 pt 160.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 175>
+  <Overprint No >
+  <TLOrigin  71.0 pt 172.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 176>
+  <Overprint No >
+  <TLOrigin  91.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 177>
+  <Overprint No >
+  <TLOrigin  68.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 178>
+  <Overprint No >
+  <TLOrigin  205.0 pt 150.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 179>
+  <Overprint No >
+  <TLOrigin  238.0 pt 148.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+   <FSize  16.0 pt>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 180>
+  <Overprint No >
+  <TLOrigin  73.0 pt 149.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+  <String `2Head Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 181>
+  <Overprint No >
+  <TLOrigin  71.0 pt 160.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 182>
+  <Overprint No >
+  <TLOrigin  71.0 pt 172.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 183>
+  <Overprint No >
+  <TLOrigin  91.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 184>
+  <Overprint No >
+  <TLOrigin  68.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 185>
+  <Overprint No >
+  <TLOrigin  71.0 pt 160.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 186>
+  <Overprint No >
+  <TLOrigin  71.0 pt 172.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 187>
+  <Overprint No >
+  <TLOrigin  91.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 188>
+  <Overprint No >
+  <TLOrigin  68.0 pt 159.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+   <FPairKern No >
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 189>
+  <Overprint No >
+  <TLOrigin  75.0 pt 184.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+  <String `3HeadLine'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 190>
+  <Overprint No >
+  <TLOrigin  338.0 pt 254.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Figure1'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 191>
+  <Overprint No >
+  <TLOrigin  75.0 pt 262.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+  > # end of Font
+  <String `Listing1'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 192>
+  <Overprint No >
+  <TLOrigin  77.0 pt 628.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Table1'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 193>
+  <Overprint No >
+  <TLOrigin  78.0 pt 659.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 194>
+  <Overprint No >
+  <TLOrigin  79.0 pt 695.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 195>
+  <Overprint No >
+  <TLOrigin  80.0 pt 730.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 196>
+  <Overprint No >
+  <TLOrigin  79.0 pt 690.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+ > # end of TextLine
+ <TextLine 
+  <Unique 197>
+  <Overprint No >
+  <TLOrigin  80.0 pt 692.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `TableB'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 198>
+  <Overprint No >
+  <TLOrigin  82.0 pt 724.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+   <FSize  12.0 pt>
+  > # end of Font
+ > # end of TextLine
+ <TextLine 
+  <Unique 199>
+  <Overprint No >
+  <TLOrigin  81.0 pt 725.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+  > # end of Font
+  <String `3SHeadLine'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 200>
+  <Overprint No >
+  <TLOrigin  83.0 pt 756.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `1HeadingSpacer'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 201>
+  <Overprint No >
+  <TLOrigin  75.0 pt 496.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Note'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 202>
+  <Overprint No >
+  <TLOrigin  75.0 pt 430.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Warning'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 203>
+  <Overprint No >
+  <TLOrigin  75.0 pt 373.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Important'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 204>
+  <Overprint No >
+  <TLOrigin  75.0 pt 291.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Sidebar2'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 205>
+  <Overprint No >
+  <TLOrigin  75.0 pt 332.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Sidebar1'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 206>
+  <Overprint No >
+  <TLOrigin  73.0 pt 104.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+  <String `figurespacer'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 207>
+  <Overprint No >
+  <TLOrigin  75.0 pt 583.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+  > # end of Font
+  <String `Fielddesc'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 208>
+  <Overprint No >
+  <TLOrigin  79.0 pt 542.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Palatino.B'>
+   <FWeight `Bold'>
+   <FPostScriptName `Palatino-Bold'>
+   <FSize  12.0 pt>
+  > # end of Font
+  <String `RoH Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 209>
+  <Overprint No >
+  <TLOrigin  74.0 pt 47.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+   <FSize  12.0 pt>
+   <FPairKern No >
+  > # end of Font
+  <String `1Head Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 210>
+  <Overprint No >
+  <TLOrigin  71.0 pt 221.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Helvetica.B'>
+   <FFamily `Helvetica'>
+   <FWeight `Bold'>
+   <FPostScriptName `Helvetica-Bold'>
+  > # end of Font
+  <String `4HeadLine'>
+ > # end of TextLine
+ <Frame 
+  <Unique 212>
+  <Pen 15>
+  <Fill 7>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  70.0 pt 18.024 pt 182.016 pt 14.976 pt>
+  <BRect  70.0 pt 18.024 pt 182.016 pt 14.976 pt>
+  <FrameType NotAnchored >
+  <Tag `Footnote'>
+  <PolyLine 
+   <Unique 213>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <HeadCap Square >
+   <TailCap Square >
+   <Overprint No >
+   <NumPoints 2>
+   <Point  9.0 pt 2.016 pt>
+   <Point  153.0 pt 2.016 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 219>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 115.0 pt 192.0 pt 16.0 pt>
+  <BRect  72.0 pt 115.0 pt 192.0 pt 16.0 pt>
+  <FrameType NotAnchored >
+  <Tag `figurespacer'>
+ > # end of Frame
+ <Frame 
+  <Unique 221>
+  <PenWidth  0.5 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  71.0 pt 155.0 pt 468.0 pt 6.0 pt>
+  <BRect  71.0 pt 155.0 pt 468.0 pt 6.0 pt>
+  <FrameType NotAnchored >
+  <Tag `2Head Line'>
+  <PolyLine 
+   <Unique 222>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  44.0 pt 1.0 pt>
+   <Point  462.0 pt 1.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 224>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  71.0 pt 55.024 pt 468.0 pt 7.0 pt>
+  <BRect  71.0 pt 55.024 pt 468.0 pt 7.0 pt>
+  <FrameType NotAnchored >
+  <Tag `1Head Line'>
+  <PolyLine 
+   <Unique 225>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 1.5 pt>
+   <Point  468.0 pt 1.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 227>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 84.024 pt 468.0 pt 7.0 pt>
+  <BRect  72.0 pt 84.024 pt 468.0 pt 7.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Single Line'>
+  <PolyLine 
+   <Unique 228>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 2.0 pt>
+   <Point  468.0 pt 2.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 230>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  71.0 pt 193.0 pt 468.0 pt 6.0 pt>
+  <BRect  71.0 pt 193.0 pt 468.0 pt 6.0 pt>
+  <FrameType NotAnchored >
+  <Tag `3HeadLine'>
+  <PolyLine 
+   <Unique 231>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  66.0 pt 1.0 pt>
+   <Point  462.0 pt 1.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 233>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  70.0 pt 229.0 pt 468.0 pt 4.0 pt>
+  <BRect  70.0 pt 229.0 pt 468.0 pt 4.0 pt>
+  <FrameType NotAnchored >
+  <Tag `4HeadLine'>
+  <PolyLine 
+   <Unique 234>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  66.0 pt 1.0 pt>
+   <Point  462.0 pt 1.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 236>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 270.0 pt 192.0 pt 7.0 pt>
+  <BRect  72.0 pt 270.0 pt 192.0 pt 7.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Listing1'>
+  <PolyLine 
+   <Unique 237>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 0.5 pt>
+   <Point  95.0 pt 0.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 239>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  336.0 pt 264.0 pt 192.0 pt 16.0 pt>
+  <BRect  336.0 pt 264.0 pt 192.0 pt 16.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Figure1'>
+  <PolyLine 
+   <Unique 240>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 0.5 pt>
+   <Point  93.0 pt 0.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 242>
+  <Pen 15>
+  <PenWidth  0.5 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  70.0 pt 300.0 pt 468.0 pt 5.0 pt>
+  <BRect  70.0 pt 300.0 pt 468.0 pt 5.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Sidebar2'>
+  <PolyLine 
+   <Unique 243>
+   <Pen 0>
+   <PenWidth  2.0 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 2.5 pt>
+   <Point  462.0 pt 2.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 245>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 344.024 pt 468.0 pt 5.5 pt>
+  <BRect  72.0 pt 344.024 pt 468.0 pt 5.5 pt>
+  <FrameType NotAnchored >
+  <Tag `Sidebar1'>
+  <PolyLine 
+   <Unique 246>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 0.5 pt>
+   <Point  462.0 pt 0.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 248>
+  <Pen 15>
+  <PenWidth  0.2 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  90.0 pt 390.333 pt 396.0 pt 13.0 pt>
+  <BRect  90.0 pt 390.333 pt 396.0 pt 13.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Important'>
+  <TextLine 
+   <Unique 249>
+   <Overprint No >
+   <TLOrigin  66.0 pt 6.5 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `IMPORTANT'>
+   > # end of Font
+   <String `IMPORTANT'>
+  > # end of TextLine
+ > # end of Frame
+ <Frame 
+  <Unique 251>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  90.0 pt 449.833 pt 396.0 pt 13.0 pt>
+  <BRect  90.0 pt 449.833 pt 396.0 pt 13.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Warning'>
+  <TextLine 
+   <Unique 252>
+   <Overprint No >
+   <TLOrigin  46.0 pt 7.0 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `10bat'>
+    <FPlatformName `M.Zapf Dingbats.P'>
+    <FFamily `Zapf Dingbats'>
+    <FWeight `Medium'>
+    <FPostScriptName `ZapfDingbats'>
+    <FPairKern No >
+   > # end of Font
+   <String `s'>
+  > # end of TextLine
+  <TextLine 
+   <Unique 253>
+   <Overprint No >
+   <TLOrigin  66.0 pt 6.5 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `WARNING'>
+   > # end of Font
+   <String `WARNING'>
+  > # end of TextLine
+ > # end of Frame
+ <Frame 
+  <Unique 255>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  90.0 pt 506.667 pt 396.0 pt 13.0 pt>
+  <BRect  90.0 pt 506.667 pt 396.0 pt 13.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Note'>
+  <TextLine 
+   <Unique 256>
+   <Overprint No >
+   <TLOrigin  66.0 pt 6.5 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `Note&FdHds'>
+    <FSize  9.0 pt>
+    <FDW  0.0 pt>
+   > # end of Font
+   <String `Note'>
+  > # end of TextLine
+ > # end of Frame
+ <Frame 
+  <Unique 258>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  77.0 pt 551.024 pt 468.0 pt 7.5 pt>
+  <BRect  77.0 pt 551.024 pt 468.0 pt 7.5 pt>
+  <FrameType NotAnchored >
+  <Tag `RoH Line'>
+  <PolyLine 
+   <Unique 259>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 1.5 pt>
+   <Point  468.0 pt 1.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 261>
+  <Pen 15>
+  <PenWidth  0.2 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  90.0 pt 591.667 pt 396.668 pt 14.0 pt>
+  <BRect  90.0 pt 591.667 pt 396.668 pt 14.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Fielddesc'>
+  <TextLine 
+   <Unique 262>
+   <Overprint No >
+   <TLOrigin  66.0 pt 7.0 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <String `Field descriptions'>
+  > # end of TextLine
+ > # end of Frame
+ <Frame 
+  <Unique 264>
+  <PenWidth  0.5 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 638.0 pt 468.0 pt 7.0 pt>
+  <BRect  72.0 pt 638.0 pt 468.0 pt 7.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Table1'>
+  <PolyLine 
+   <Unique 265>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 3.0 pt>
+   <Point  468.0 pt 3.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 267>
+  <Pen 15>
+  <PenWidth  0.5 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 700.0 pt 468.0 pt 7.0 pt>
+  <BRect  72.0 pt 700.0 pt 468.0 pt 7.0 pt>
+  <FrameType NotAnchored >
+  <Tag `TableB'>
+  <PolyLine 
+   <Unique 268>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  66.0 pt 3.0 pt>
+   <Point  462.0 pt 3.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 277>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 734.0 pt 468.0 pt 6.0 pt>
+  <BRect  72.0 pt 734.0 pt 468.0 pt 6.0 pt>
+  <FrameType NotAnchored >
+  <Tag `3SHeadLine'>
+  <PolyLine 
+   <Unique 278>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 2.0 pt>
+   <Point  468.0 pt 2.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 280>
+  <Pen 15>
+  <PenWidth  0.2 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 765.0 pt 470.0 pt 26.0 pt>
+  <BRect  72.0 pt 765.0 pt 470.0 pt 26.0 pt>
+  <FrameType NotAnchored >
+  <Tag `1HeadingSpacer'>
+ > # end of Frame
+> # end of Page
+<Page 
+ <Unique 281>
+ <PageType ReferencePage >
+ <PageTag `Reference2'>
+ <PageSize  612.0 pt 792.0 pt>
+ <PageOrientation Portrait >
+ <PageAngle  0.0>
+ <TextLine 
+  <Unique 283>
+  <Separation 0>
+  <ObColor `Black'>
+  <DashedPattern 
+   <DashedStyle Solid >
+  > # end of DashedPattern
+  <Overprint No >
+  <TLOrigin  93.0 pt 13.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `'>
+   <FPlatformName `M.Times.P'>
+   <FFamily `Times'>
+   <FPostScriptName `Times-Roman'>
+  > # end of Font
+  <String `FdWarning'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 284>
+  <Overprint No >
+  <TLOrigin  80.0 pt 185.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <Font 
+   <FTag `Folio'>
+   <FPlatformName `M.Palatino.B'>
+   <FFamily `Palatino'>
+   <FWeight `Bold'>
+   <FPostScriptName `Palatino-Bold'>
+   <FPairKern No >
+  > # end of Font
+  <String `FN.Footnote'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 285>
+  <Overprint No >
+  <TLOrigin  80.0 pt 76.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Subheading Rule'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 286>
+  <Overprint No >
+  <TLOrigin  89.0 pt 456.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `SumHd2Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 287>
+  <Overprint No >
+  <TLOrigin  89.0 pt 497.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `SumHd3Line'>
+ > # end of TextLine
+ <TextLine 
+  <Unique 288>
+  <Overprint No >
+  <TLOrigin  89.0 pt 617.0 pt>
+  <TLAlignment Left >
+  <TLLanguage USEnglish >
+  <String `Intro'>
+ > # end of TextLine
+ <Frame 
+  <Unique 290>
+  <Pen 15>
+  <Fill 7>
+  <PenWidth  0.2 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  90.0 pt 23.833 pt 396.0 pt 13.0 pt>
+  <BRect  90.0 pt 23.833 pt 396.0 pt 13.0 pt>
+  <FrameType NotAnchored >
+  <Tag `FdWarning'>
+  <TextLine 
+   <Unique 291>
+   <Overprint No >
+   <TLOrigin  138.0 pt 7.0 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `10bat'>
+    <FPlatformName `M.Zapf Dingbats.P'>
+    <FFamily `Zapf Dingbats'>
+    <FWeight `Medium'>
+    <FPostScriptName `ZapfDingbats'>
+   > # end of Font
+   <String `s'>
+  > # end of TextLine
+  <TextLine 
+   <Unique 292>
+   <Overprint No >
+   <TLOrigin  158.0 pt 6.5 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `WARNING'>
+   > # end of Font
+   <String `WARNING'>
+  > # end of TextLine
+ > # end of Frame
+ <Frame 
+  <Unique 294>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 84.024 pt 468.0 pt 2.75 pt>
+  <BRect  72.0 pt 84.024 pt 468.0 pt 2.75 pt>
+  <FrameType NotAnchored >
+  <Tag `Subheading Rule'>
+  <PolyLine 
+   <Unique 295>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <HeadCap Square >
+   <TailCap Square >
+   <Overprint No >
+   <NumPoints 2>
+   <Point  20.0 pt 0.5 pt>
+   <Point  440.0 pt 0.5 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 297>
+  <Pen 15>
+  <Fill 15>
+  <PenWidth  1.0 pt>
+  <Separation 0>
+  <ObColor `Black'>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  72.0 pt 194.0 pt 180.0 pt 12.0 pt>
+  <BRect  72.0 pt 194.0 pt 180.0 pt 12.0 pt>
+  <FrameType NotAnchored >
+  <Tag `FN.Footnote'>
+ > # end of Frame
+ <Frame 
+  <Unique 299>
+  <Fill 7>
+  <Separation 0>
+  <ObColor `Black'>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  67.0 pt 470.024 pt 462.0 pt 6.5 pt>
+  <BRect  67.0 pt 470.024 pt 462.0 pt 6.5 pt>
+  <FrameType NotAnchored >
+  <Tag `SumHd2Line'>
+  <PolyLine 
+   <Unique 300>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 1.0 pt>
+   <Point  462.0 pt 1.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 302>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  68.0 pt 505.024 pt 462.0 pt 4.5 pt>
+  <BRect  68.0 pt 505.024 pt 462.0 pt 4.5 pt>
+  <FrameType NotAnchored >
+  <Tag `SumHd3Line'>
+  <PolyLine 
+   <Unique 303>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 1.0 pt>
+   <Point  462.0 pt 1.0 pt>
+  > # end of PolyLine
+ > # end of Frame
+ <Frame 
+  <Unique 305>
+  <Pen 15>
+  <PenWidth  1.0 pt>
+  <Angle  360.0>
+  <Overprint No >
+  <ShapeRect  67.0 pt 630.024 pt 468.0 pt 159.0 pt>
+  <BRect  67.0 pt 630.024 pt 468.0 pt 159.0 pt>
+  <FrameType NotAnchored >
+  <Tag `Intro'>
+  <PolyLine 
+   <Unique 306>
+   <Pen 0>
+   <PenWidth  0.25 pt>
+   <Overprint No >
+   <NumPoints 2>
+   <Point  0.0 pt 153.0 pt>
+   <Point  468.0 pt 153.0 pt>
+  > # end of PolyLine
+  <TextLine 
+   <Unique 307>
+   <Overprint No >
+   <TLOrigin  114.0 pt 170.976 pt>
+   <TLAlignment Left >
+   <TLLanguage USEnglish >
+   <Font 
+    <FTag `'>
+    <FPlatformName `M.Times.P'>
+    <FFamily `Times'>
+    <FPostScriptName `Times-Roman'>
+    <FSize  18.0 pt>
+   > # end of Font
+  > # end of TextLine
+ > # end of Frame
+> # end of Page
+<Page 
+ <Unique 10368>
+ <PageType BodyPage >
+ <PageNum `1'>
+ <PageSize  612.0 pt 792.0 pt>
+ <PageOrientation Portrait >
+ <PageAngle  0.0>
+ <PageBackground `Default'>
+ <TextRect 
+  <ID 7>
+  <Unique 10369>
+  <Pen 15>
+  <Fill 7>
+  <PenWidth  1.0 pt>
+  <Separation 0>
+  <ObColor `Black'>
+  <DashedPattern 
+   <DashedStyle Solid >
+  > # end of DashedPattern
+  <Overprint No >
+  <ShapeRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <BRect  72.0 pt 99.0 pt 468.0 pt 612.0 pt>
+  <TRNext 0>
+ > # end of TextRect
+> # end of Page
+<TextFlow 
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 321>
+  <Pgf 
+   <PgfTag `X1Hd.TopHdr'>
+   <PgfUseNextTag Yes >
+   <PgfNextTag `X2Hd.BtmHdr'>
+   <PgfAlignment Right >
+   <PgfFIndent  66.0 pt>
+   <PgfLIndent  66.0 pt>
+   <PgfRIndent  54.0 pt>
+   <PgfTopSeparator `'>
+   <PgfBotSeparator `'>
+   <PgfPlacement Anywhere >
+   <PgfPlacementStyle Normal >
+   <PgfRunInDefaultPunct `. '>
+   <PgfSpBefore  0.0 pt>
+   <PgfSpAfter  22.0 pt>
+   <PgfWithPrev No >
+   <PgfWithNext No >
+   <PgfBlockSize 1>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Palatino.B'>
+    <FFamily `Palatino'>
+    <FVar `Regular'>
+    <FWeight `Bold'>
+    <FAngle `Regular'>
+    <FPostScriptName `Palatino-Bold'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  44.9997 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfLineSpacing Fixed >
+   <PgfLeading  0.0 pt>
+   <PgfAutoNum No >
+   <PgfNumTabs 0>
+   <PgfHyphenate No >
+   <HyphenMaxLines 2>
+   <HyphenMinPrefix 2>
+   <HyphenMinSuffix 2>
+   <HyphenMinWord 5>
+   <PgfLetterSpace No >
+   <PgfMinWordSpace 100>
+   <PgfOptWordSpace 100>
+   <PgfMaxWordSpace 100>
+   <PgfLanguage USEnglish >
+   <PgfCellAlignment Top >
+   <PgfCellMargins  0.0 pt 0.0 pt 0.0 pt 0.0 pt>
+   <PgfCellLMarginFixed No >
+   <PgfCellTMarginFixed No >
+   <PgfCellRMarginFixed No >
+   <PgfCellBMarginFixed No >
+  > # end of Pgf
+  <ParaLine 
+   <TextRectID 4>
+   <Variable 
+    <VariableName `Running H/F 2'>
+    <Unique 319>
+   > # end of Variable
+  >
+ > # end of Para
+ <Para 
+  <Unique 325>
+  <Pgf 
+   <PgfTag `X2Hd.BtmHdr'>
+   <PgfUseNextTag No >
+   <PgfNextTag `'>
+   <PgfSpAfter  30.0 pt>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.P'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Medium'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  -1.9974 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+  > # end of Pgf
+  <ParaLine 
+   <Variable 
+    <VariableName `Running H/F 1'>
+    <Unique 323>
+   > # end of Variable
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 462>
+  <Pgf 
+   <PgfTag `XR.RightFtr'>
+   <PgfUseNextTag Yes >
+   <PgfNextTag `XDR.DraftRight'>
+   <PgfAlignment Left >
+   <PgfFIndent  0.0 pt>
+   <PgfLIndent  0.0 pt>
+   <PgfRIndent  0.0 pt>
+   <PgfSpBefore  10.0 pt>
+   <PgfSpAfter  7.0 pt>
+   <PgfBlockSize 3>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.P'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Medium'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  0.0 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfAutoNum Yes >
+   <PgfNumFormat `'>
+   <PgfNumberFont `fignum'>
+   <PgfNumAtEnd Yes >
+   <PgfNumTabs 1>
+   <TabStop 
+    <TSX  459.0 pt>
+    <TSType Right >
+    <TSLeaderStr ` '>
+   > # end of TabStop
+  > # end of Pgf
+  <ParaLine 
+   <TextRectID 5>
+   <Variable 
+    <VariableName `Running H/F 4'>
+    <Unique 457>
+   > # end of Variable
+   <Char Tab >
+   <String ` '>
+   <Font 
+    <FTag `Folio'>
+    <FPlatformName `M.Palatino.B'>
+    <FFamily `Palatino'>
+    <FWeight `Bold'>
+    <FPostScriptName `Palatino-Bold'>
+    <FSize  10.0 pt>
+    <FPairKern No >
+   > # end of Font
+   <Variable 
+    <VariableName `Current Page #'>
+    <Unique 460>
+   > # end of Variable
+  >
+ > # end of Para
+ <Para 
+  <Unique 469>
+  <Pgf 
+   <PgfTag `XDR.DraftRight'>
+   <PgfUseNextTag No >
+   <PgfNextTag `'>
+   <PgfAlignment Center >
+   <PgfSpAfter  0.0 pt>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.B'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Bold'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica-Bold'>
+    <FSize  7.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  0.0 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfLeading  2.0 pt>
+  > # end of Pgf
+  <ParaLine 
+   <String `Draft. Confidential. \xa9 '>
+   <Variable 
+    <VariableName `Current Date (Long)'>
+    <Unique 464>
+   > # end of Variable
+   <String ` Apple Computer, Inc. '>
+   <Variable 
+    <VariableName `Current Date (Short)'>
+    <Unique 467>
+   > # end of Variable
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <TFTag `A'>
+ <TFAutoConnect Yes >
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 10344>
+  <PgfTag `Body'>
+  <ParaLine 
+   <TextRectID 6>
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <TFTag `A'>
+ <TFAutoConnect Yes >
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 127>
+  <PgfTag `Body'>
+  <ParaLine 
+   <TextRectID 7>
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 359>
+  <Pgf 
+   <PgfTag `X1Hd.TopHdr'>
+   <PgfUseNextTag Yes >
+   <PgfNextTag `X2Hd.BtmHdr'>
+   <PgfFIndent  66.0 pt>
+   <PgfLIndent  66.0 pt>
+   <PgfSpAfter  22.0 pt>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Palatino.B'>
+    <FFamily `Palatino'>
+    <FVar `Regular'>
+    <FWeight `Bold'>
+    <FAngle `Regular'>
+    <FPostScriptName `Palatino-Bold'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  44.9997 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfLineSpacing Fixed >
+   <PgfLeading  0.0 pt>
+   <PgfNumTabs 0>
+   <HyphenMaxLines 2>
+   <HyphenMinPrefix 2>
+   <HyphenMinSuffix 2>
+  > # end of Pgf
+  <ParaLine 
+   <TextRectID 1>
+   <Variable 
+    <VariableName `Running H/F 2'>
+    <Unique 357>
+   > # end of Variable
+  >
+ > # end of Para
+ <Para 
+  <Unique 363>
+  <Pgf 
+   <PgfTag `X2Hd.BtmHdr'>
+   <PgfUseNextTag No >
+   <PgfNextTag `'>
+   <PgfSpAfter  30.0 pt>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.P'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Medium'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  -1.9974 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+  > # end of Pgf
+  <ParaLine 
+   <Variable 
+    <VariableName `Running H/F 1'>
+    <Unique 361>
+   > # end of Variable
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 398>
+  <Pgf 
+   <PgfTag `XR.RightFtr'>
+   <PgfUseNextTag Yes >
+   <PgfNextTag `XDR.DraftRight'>
+   <PgfFIndent  0.0 pt>
+   <PgfLIndent  0.0 pt>
+   <PgfSpBefore  10.0 pt>
+   <PgfSpAfter  7.0 pt>
+   <PgfBlockSize 3>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.P'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Medium'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica'>
+    <FSize  9.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  0.0 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfAutoNum Yes >
+   <PgfNumFormat `'>
+   <PgfNumberFont `fignum'>
+   <PgfNumAtEnd Yes >
+   <PgfNumTabs 1>
+   <TabStop 
+    <TSX  459.0 pt>
+    <TSType Right >
+    <TSLeaderStr ` '>
+   > # end of TabStop
+  > # end of Pgf
+  <ParaLine 
+   <TextRectID 2>
+   <Font 
+    <FTag `Folio'>
+    <FPlatformName `M.Palatino.B'>
+    <FFamily `Palatino'>
+    <FWeight `Bold'>
+    <FPostScriptName `Palatino-Bold'>
+    <FSize  10.0 pt>
+    <FPairKern No >
+   > # end of Font
+   <Variable 
+    <VariableName `Current Page #'>
+    <Unique 396>
+   > # end of Variable
+   <String ` '>
+   <Font 
+    <FTag `'>
+   > # end of Font
+   <Variable 
+    <VariableName `Running H/F 4'>
+    <Unique 442>
+   > # end of Variable
+  >
+ > # end of Para
+ <Para 
+  <Unique 405>
+  <Pgf 
+   <PgfTag `XDR.DraftRight'>
+   <PgfUseNextTag No >
+   <PgfNextTag `'>
+   <PgfAlignment Center >
+   <PgfSpAfter  0.0 pt>
+   <PgfFont 
+    <FTag `'>
+    <FPlatformName `M.Helvetica.B'>
+    <FFamily `Helvetica'>
+    <FVar `Regular'>
+    <FWeight `Bold'>
+    <FAngle `Regular'>
+    <FPostScriptName `Helvetica-Bold'>
+    <FSize  7.0 pt>
+    <FUnderlining FNoUnderlining >
+    <FUnderline No >
+    <FDoubleUnderline No >
+    <FNumericUnderline No >
+    <FOverline No >
+    <FStrike No >
+    <FChangeBar No >
+    <FOutline No >
+    <FShadow No >
+    <FPairKern Yes >
+    <FCase FAsTyped >
+    <FPosition FNormal >
+    <FSupScript No >
+    <FSubScript No >
+    <FDX  0.0 pt>
+    <FDY  0.0 pt>
+    <FDW  0.0 pt>
+    <FSeparation 0>
+    <FColor `Black'>
+   > # end of PgfFont
+   <PgfLeading  2.0 pt>
+  > # end of Pgf
+  <ParaLine 
+   <String `Draft. Confidential. \xa9 '>
+   <Variable 
+    <VariableName `Current Date (Long)'>
+    <Unique 400>
+   > # end of Variable
+   <String ` Apple Computer, Inc. '>
+   <Variable 
+    <VariableName `Current Date (Short)'>
+    <Unique 403>
+   > # end of Variable
+  >
+ > # end of Para
+> # end of TextFlow
+<TextFlow 
+ <TFTag `A'>
+ <TFAutoConnect Yes >
+ <Notes 
+ > # end of Notes
+ <Para 
+  <Unique 378>
+  <PgfTag `Body'>
+  <ParaLine 
+   <TextRectID 3>
+  >
+ > # end of Para
+> # end of TextFlow
